@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports — Nidhi Path SmartCRM</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="/admin/dashboard.html" class="sidebar-logo">
+      <img src="/assets/img/logo.jpg" alt="NP" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text"><strong>NIDHI PATH</strong><small>SmartCRM</small></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="/admin/dashboard.html"><span class="ico">📊</span> Dashboard</a>
+      <a href="/admin/crm.html"><span class="ico">📋</span> CRM Leads</a>
+      <a href="/admin/users.html"><span class="ico">👥</span> Users</a>
+      <div class="sidebar-section">Finance</div>
+      <a href="/admin/commissions.html"><span class="ico">💰</span> Commissions</a>
+      <a href="/admin/reports.html"><span class="ico">📈</span> Reports</a>
+      <div class="sidebar-section">System</div>
+      <a href="/admin/site-settings.html"><span class="ico">⚙️</span> Site Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user"><div class="avatar" data-user-avatar>A</div><div class="sidebar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div></div>
+      <button class="sidebar-logout" data-logout><span>↩</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="topbar-title">Reports</div><div class="topbar-sub">Analytics &amp; intelligence</div></div>
+      <div class="topbar-right"><div class="topbar-user"><div class="topbar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div><div class="avatar" data-user-avatar>A</div></div></div>
+    </header>
+
+    <main class="content">
+      <div class="tabs" id="report-tabs">
+        <button class="tab active" data-tab="overview">Overview</button>
+        <button class="tab" data-tab="employee">Employee Performance</button>
+        <button class="tab" data-tab="source">Source Analysis</button>
+        <button class="tab" data-tab="commission">Commission Report</button>
+        <button class="tab" data-tab="funnel">Lead Funnel</button>
+      </div>
+
+      <!-- Overview -->
+      <div class="tab-panel active" id="panel-overview">
+        <div class="stat-grid mb-4">
+          <div class="stat-card"><div class="stat-ico si-navy">📋</div><div><div class="stat-label">Total Leads</div><div class="stat-value" id="o-total">—</div></div></div>
+          <div class="stat-card"><div class="stat-ico si-green">✅</div><div><div class="stat-label">Sanctioned</div><div class="stat-value" id="o-sanctioned">—</div></div></div>
+          <div class="stat-card"><div class="stat-ico si-teal">💸</div><div><div class="stat-label">Disbursed</div><div class="stat-value" id="o-disbursed">—</div></div></div>
+          <div class="stat-card"><div class="stat-ico si-red">❌</div><div><div class="stat-label">Rejected</div><div class="stat-value" id="o-rejected">—</div></div></div>
+          <div class="stat-card"><div class="stat-ico si-gold">₹</div><div><div class="stat-label">Loan Sanctioned</div><div class="stat-value" id="o-loan">—</div></div></div>
+          <div class="stat-card"><div class="stat-ico si-purple">👥</div><div><div class="stat-label">Active Students</div><div class="stat-value" id="o-students">—</div></div></div>
+        </div>
+        <div class="card"><div class="card-head"><h2>Lead Status Distribution</h2></div><div class="funnel" id="o-funnel"></div></div>
+      </div>
+
+      <!-- Employee Performance -->
+      <div class="tab-panel" id="panel-employee">
+        <div class="card card-flush">
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Rank</th><th>Employee</th><th>Assigned</th><th>Sanctioned</th><th>Rejected</th><th>Updates</th><th>Conv. Rate</th><th>Value</th></tr></thead>
+              <tbody id="emp-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Source Analysis -->
+      <div class="tab-panel" id="panel-source">
+        <div class="card card-flush">
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Source Type</th><th>Total Leads</th><th>Sanctioned</th><th>Disbursed</th><th>Rejected</th><th>Conv. Rate</th><th>Value</th><th>Comm. Due</th></tr></thead>
+              <tbody id="source-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Commission Report -->
+      <div class="tab-panel" id="panel-commission">
+        <div class="stat-grid mb-4">
+          <div class="stat-card"><div class="stat-ico si-navy">💵</div><div><div class="stat-label">Total Earned</div><div class="stat-value" id="cr-earned">—</div></div></div>
+          <div class="stat-card"><div class="stat-ico si-red">⏳</div><div><div class="stat-label">Total Due</div><div class="stat-value" id="cr-due">—</div></div></div>
+          <div class="stat-card"><div class="stat-ico si-green">✅</div><div><div class="stat-label">Total Paid</div><div class="stat-value" id="cr-paid">—</div></div></div>
+        </div>
+        <div class="card card-flush">
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Client</th><th>Type</th><th>Records</th><th>Earned</th><th>Due</th><th>Paid</th></tr></thead>
+              <tbody id="cr-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lead Funnel -->
+      <div class="tab-panel" id="panel-funnel">
+        <div class="card"><div class="card-head"><h2>Pipeline Funnel</h2><span class="text-sm muted" id="funnel-active">—</span></div><div class="funnel" id="f-funnel"></div></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = window.Auth.requireAuth(['admin','board_member']);
+  if (!user) return;
+  window.Auth.initShell(user);
+
+  function renderFunnel(targetId, funnelArr) {
+    const max = Math.max(...funnelArr.map(f => f.count), 1);
+    setHtml(targetId, funnelArr.map(f => `<div class="funnel-row"><div class="funnel-label">${escapeHtml(f.stage)}</div><div class="funnel-track"><div class="funnel-fill" style="width:${Math.round(f.count/max*100)}%"></div></div><div class="funnel-count">${f.count}</div></div>`).join(''));
+  }
+
+  // Overview + funnel
+  try {
+    const overview = await apiGet('/api/reports/overview');
+    const sc = overview.status_counts || {};
+    setText('o-total', overview.total_leads||0);
+    setText('o-sanctioned', (sc['Sanctioned']||0)+(sc['Approved']||0));
+    setText('o-disbursed', sc['Disbursed']||0);
+    setText('o-rejected', sc['Rejected']||0);
+    setText('o-loan', formatCurrency(overview.loans.total_sanctioned, true));
+    setText('o-students', overview.users.student||0);
+    const stages = ['New','Registered','Assigned','Documents Pending','Work Started','In Progress','Bank Review','Sanctioned','Disbursed','Rejected','Closed'];
+    renderFunnel('o-funnel', stages.map(s => ({ stage: s, count: sc[s]||0 })));
+  } catch {}
+
+  // Employee
+  try {
+    const { performance } = await apiGet('/api/reports/employee-performance');
+    setHtml('emp-body', performance.length ? performance.map((e,i) => {
+      const cls = e.conversion_rate>=50?'text-green':e.conversion_rate>=25?'text-gold':'text-danger';
+      return `<tr><td><strong>${i+1}</strong></td><td><strong>${escapeHtml(e.name)}</strong></td><td>${e.assigned_count}</td><td>${e.sanctioned_count}</td><td>${e.rejected_count}</td><td>${e.updates_posted}</td><td class="${cls} fw-700">${e.conversion_rate}%</td><td>${formatCurrency(e.total_sanctioned_value,true)}</td></tr>`;
+    }).join('') : emptyState(8, 'No employee data.'));
+  } catch {}
+
+  // Source
+  try {
+    const { source_performance } = await apiGet('/api/reports/source-wise');
+    setHtml('source-body', source_performance.length ? source_performance.map(s => {
+      const cls = s.conversion_rate>=50?'text-green':s.conversion_rate>=25?'text-gold':'text-danger';
+      return `<tr><td><strong>${escapeHtml(clientTypeLabel(s.source))}</strong></td><td>${s.total_leads}</td><td>${s.sanctioned}</td><td>${s.disbursed}</td><td>${s.rejected}</td><td class="${cls} fw-700">${s.conversion_rate}%</td><td>${formatCurrency(s.total_value,true)}</td><td>${formatCurrency(s.commission_due,true)}</td></tr>`;
+    }).join('') : emptyState(8, 'No source data.'));
+  } catch {}
+
+  // Commission report
+  try {
+    const { by_client, totals } = await apiGet('/api/reports/commission-summary');
+    setText('cr-earned', formatCurrency(totals.total_earned, true));
+    setText('cr-due', formatCurrency(totals.total_due, true));
+    setText('cr-paid', formatCurrency(totals.total_paid, true));
+    setHtml('cr-body', by_client.length ? by_client.map(c => `<tr><td><strong>${escapeHtml(c.client_name)}</strong></td><td><span class="chip chip-${c.client_type||'self_own'}">${clientTypeLabel(c.client_type)}</span></td><td>${c.count}</td><td>${formatCurrency(c.earned,true)}</td><td class="text-danger">${formatCurrency(c.due,true)}</td><td class="text-green">${formatCurrency(c.paid,true)}</td></tr>`).join('') : emptyState(6, 'No commission data.'));
+  } catch {}
+
+  // Funnel tab
+  try {
+    const { funnel, total_active } = await apiGet('/api/reports/funnel');
+    setText('funnel-active', `${total_active} active leads`);
+    renderFunnel('f-funnel', funnel);
+  } catch {}
+
+  // Tab switching
+  el('report-tabs').addEventListener('click', e => {
+    const t = e.target.closest('.tab'); if (!t) return;
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    t.classList.add('active');
+    el('panel-' + t.dataset.tab).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

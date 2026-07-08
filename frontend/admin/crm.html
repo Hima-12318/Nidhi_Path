@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Leads — Nidhi Path SmartCRM</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="/admin/dashboard.html" class="sidebar-logo">
+      <img src="/assets/img/logo.jpg" alt="NP" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text"><strong>NIDHI PATH</strong><small>SmartCRM</small></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="/admin/dashboard.html"><span class="ico">📊</span> Dashboard</a>
+      <a href="/admin/crm.html"><span class="ico">📋</span> CRM Leads</a>
+      <a href="/admin/users.html"><span class="ico">👥</span> Users</a>
+      <div class="sidebar-section">Finance</div>
+      <a href="/admin/commissions.html"><span class="ico">💰</span> Commissions</a>
+      <a href="/admin/reports.html"><span class="ico">📈</span> Reports</a>
+      <div class="sidebar-section">System</div>
+      <a href="/admin/site-settings.html"><span class="ico">⚙️</span> Site Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user"><div class="avatar" data-user-avatar>A</div><div class="sidebar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div></div>
+      <button class="sidebar-logout" data-logout><span>↩</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="topbar-title">CRM Leads</div><div class="topbar-sub">Full lead lifecycle management</div></div>
+      <div class="topbar-right">
+        <a href="/admin/users.html" class="btn btn-primary btn-sm">+ New Lead</a>
+        <div class="topbar-user"><div class="topbar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div><div class="avatar" data-user-avatar>A</div></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- Status pills -->
+      <div class="pills" id="status-pills">
+        <button class="pill active" data-status="">All</button>
+        <button class="pill" data-status="New">New</button>
+        <button class="pill" data-status="Assigned">Assigned</button>
+        <button class="pill" data-status="Documents Pending">Docs Pending</button>
+        <button class="pill" data-status="Work Started">Work Started</button>
+        <button class="pill" data-status="In Progress">In Progress</button>
+        <button class="pill" data-status="Bank Review">Bank Review</button>
+        <button class="pill green" data-status="Sanctioned">Sanctioned</button>
+        <button class="pill green" data-status="Disbursed">Disbursed</button>
+        <button class="pill red" data-status="Rejected">Rejected</button>
+        <button class="pill" data-status="Closed">Closed</button>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="search-box"><span class="ico">🔍</span><input id="search" placeholder="Search student, email, mobile, App ID…"></div>
+        <select class="filter-sel" id="priority-filter">
+          <option value="">All Priorities</option>
+          <option value="Urgent">Urgent</option><option value="High">High</option>
+          <option value="Normal">Normal</option><option value="Low">Low</option>
+        </select>
+        <select class="filter-sel" id="emp-filter"><option value="">All Employees</option></select>
+      </div>
+
+      <!-- Table -->
+      <div class="card card-flush">
+        <div class="flex justify-between items-center" style="padding:14px 20px;border-bottom:1px solid var(--border)">
+          <span class="text-sm muted" id="lead-count">Loading…</span>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Student</th><th>Source</th><th>Employee</th><th>Priority</th><th>Status</th><th>Follow-up</th><th>Loan</th><th></th></tr></thead>
+            <tbody id="leads-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Slide-over panel -->
+<div class="slideover-backdrop" id="so-backdrop"></div>
+<div class="slideover" id="slideover">
+  <div class="slideover-head">
+    <div class="so-title"><h3 id="so-name">Lead</h3><p id="so-appid">—</p></div>
+    <button class="slideover-close" id="so-close">✕</button>
+  </div>
+  <div class="slideover-body" id="so-body"></div>
+</div>
+
+<div id="modal-overlay" class="modal-overlay"></div>
+<div id="toast-container"></div>
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = window.Auth.requireAuth(['admin','employee']);
+  if (!user) return;
+  window.Auth.initShell(user);
+
+  const STATUSES = ['New','Registered','Assigned','Verified','Documents Pending','Documents Received','Work Started','In Progress','Follow Up','Bank Review','Sanction In Progress','Sanctioned','Disbursed','Approved','Rejected','Closed'];
+  const VISIBILITY = [['internal_only','🔒 Internal Only'],['client_visible','👤 Client Visible'],['student_visible','🎓 Student Visible'],['board_visible','📊 Board Visible']];
+
+  let statusFilter = '', currentLead = null;
+
+  // Load employees for filter
+  try {
+    const { employees } = await apiGet('/api/users/dropdown/employees');
+    el('emp-filter').innerHTML = '<option value="">All Employees</option>' + employees.map(e => `<option value="${e.id}">${escapeHtml(e.full_name)}</option>`).join('');
+  } catch {}
+
+  async function loadLeads() {
+    el('leads-body').innerHTML = loadingRow(8);
+    const params = {
+      status:   statusFilter,
+      priority: el('priority-filter').value,
+      employee_id: el('emp-filter').value,
+      search:   el('search').value.trim(),
+      limit: 100,
+    };
+    try {
+      const { leads, total } = await apiGet('/api/crm/leads' + qs(params));
+      el('lead-count').textContent = `${leads.length} of ${total} leads`;
+      el('leads-body').innerHTML = leads.length ? leads.map(l => `
+        <tr class="cursor-pointer" onclick="openLead('${l.id}')">
+          <td><div class="cell-name"><div class="cell-avatar" style="background:${avatarColor(l.student?.full_name)}">${initials(l.student?.full_name)}</div><div class="cell-name-text"><strong>${escapeHtml(l.student?.full_name||'—')}</strong><span class="mono">${escapeHtml(l.application_id||'—')}</span></div></div></td>
+          <td><span class="chip chip-${l.source_client?.client_type||'self_own'}">${escapeHtml(clientTypeLabel(l.source_client?.client_type))}</span></td>
+          <td class="text-sm">${escapeHtml(l.assigned_employee?.full_name||'—')}</td>
+          <td>${priorityBadge(l.priority)}</td>
+          <td>${createStatusBadge(l.lead_status)}</td>
+          <td class="text-sm muted">${formatDate(l.next_follow_up)}</td>
+          <td>${formatCurrency(l.loan_amount_needed, true)}</td>
+          <td><button class="btn btn-outline btn-xs" onclick="event.stopPropagation();openLead('${l.id}')">Open</button></td>
+        </tr>`).join('') : emptyState(8, 'No leads found.');
+    } catch { el('leads-body').innerHTML = emptyState(8, 'Failed to load.'); }
+  }
+
+  // ─── Slide-over ───
+  window.openLead = async (id) => {
+    el('so-backdrop').classList.add('open');
+    el('slideover').classList.add('open');
+    el('so-body').innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Loading…</p></div>';
+    try {
+      const { lead } = await apiGet('/api/crm/leads/' + id);
+      currentLead = lead;
+      el('so-name').textContent = lead.student?.full_name || 'Lead';
+      el('so-appid').textContent = lead.application_id || 'No App ID';
+      renderLeadPanel(lead);
+      await loadUpdates(lead.id);
+    } catch { el('so-body').innerHTML = emptyState(1, 'Failed to load lead.'); }
+  };
+
+  function renderLeadPanel(lead) {
+    const info = [
+      ['Email', lead.student?.email], ['Mobile', lead.student?.mobile],
+      ['University', lead.university_applied], ['Country', lead.country],
+      ['Course', lead.course], ['Bank Applied', lead.bank_applied],
+      ['Loan Needed', formatCurrency(lead.loan_amount_needed, true)],
+      ['Loan Sanctioned', formatCurrency(lead.loan_amount_sanctioned, true)],
+      ['Source', lead.source_client?.full_name || 'Self'],
+      ['Assigned', lead.assigned_employee?.full_name || 'Unassigned'],
+    ];
+    el('so-body').innerHTML = `
+      <div class="so-section">
+        <div class="so-section-title">Student Details</div>
+        <div class="detail-grid">
+          ${info.map(([l,v]) => `<div class="detail-item"><div class="dl">${escapeHtml(l)}</div><div class="dv">${escapeHtml(v||'—')}</div></div>`).join('')}
+        </div>
+      </div>
+
+      <div class="so-section">
+        <div class="so-section-title">Update Lead</div>
+        <div class="form-grid-2">
+          <div class="field"><label>Status</label><select class="select" id="up-status">${STATUSES.map(s=>`<option ${s===lead.lead_status?'selected':''}>${s}</option>`).join('')}</select></div>
+          <div class="field"><label>Priority</label><select class="select" id="up-priority">${['Urgent','High','Normal','Low'].map(p=>`<option ${p===lead.priority?'selected':''}>${p}</option>`).join('')}</select></div>
+        </div>
+        <div class="form-grid-2">
+          <div class="field"><label>Next Follow-up</label><input class="input" type="date" id="up-followup" value="${lead.next_follow_up||''}"></div>
+          <div class="field"><label>Sanctioned (₹)</label><input class="input" type="number" id="up-sanctioned" value="${lead.loan_amount_sanctioned||''}"></div>
+        </div>
+        <div class="field"><label>Rejection Reason</label><input class="input" id="up-rejection" value="${escapeHtml(lead.rejection_reason||'')}"></div>
+        <div class="field"><label>Internal Notes</label><textarea class="textarea" id="up-notes" rows="2">${escapeHtml(lead.internal_notes||'')}</textarea></div>
+        <button class="btn btn-primary btn-block" id="save-lead">Save Changes</button>
+      </div>
+
+      <div class="so-section">
+        <div class="so-section-title">Post Update</div>
+        <div class="field"><label>Visibility</label><select class="select" id="new-vis">${VISIBILITY.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></div>
+        <div class="field"><label>Message</label><textarea class="textarea" id="new-update" rows="3" placeholder="Write update…"></textarea></div>
+        <button class="btn btn-navy btn-block" id="post-update">Post Update</button>
+      </div>
+
+      <div class="so-section">
+        <div class="so-section-title">Updates Timeline</div>
+        <div class="timeline" id="timeline"><div class="empty-state"><div class="empty-icon">⏳</div><p>Loading…</p></div></div>
+      </div>
+    `;
+    el('save-lead').onclick = saveLead;
+    el('post-update').onclick = postUpdate;
+  }
+
+  async function loadUpdates(leadId) {
+    try {
+      const { updates } = await apiGet(`/api/crm/leads/${leadId}/updates`);
+      const tl = el('timeline');
+      if (!tl) return;
+      tl.innerHTML = updates.length ? updates.map(u => `
+        <div class="tl-item ${u.visibility}">
+          <div class="tl-head">
+            <span class="tl-poster">${escapeHtml(u.poster?.full_name||'System')}</span>
+            <span class="tl-vis tlv-${u.visibility}">${u.visibility.replace(/_/g,' ')}</span>
+            <span class="tl-meta">${timeAgo(u.created_at)}</span>
+          </div>
+          <div class="tl-text">${escapeHtml(u.update_text)}</div>
+          ${(u.replies&&u.replies.length)?`<div class="tl-replies">${u.replies.map(r=>`<div class="tl-reply"><div class="by">${escapeHtml(r.replier?.full_name||'Client')}</div><div class="txt">${escapeHtml(r.reply_text)}</div></div>`).join('')}</div>`:''}
+        </div>`).join('') : '<p class="text-sm muted text-center" style="padding:16px">No updates yet.</p>';
+    } catch {}
+  }
+
+  async function saveLead() {
+    const btn = el('save-lead'); btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      await apiPatch('/api/crm/leads/' + currentLead.id, {
+        lead_status: el('up-status').value,
+        priority: el('up-priority').value,
+        next_follow_up: el('up-followup').value || null,
+        loan_amount_sanctioned: el('up-sanctioned').value || null,
+        rejection_reason: el('up-rejection').value || null,
+        internal_notes: el('up-notes').value || null,
+      });
+      showToast('Lead updated.', 'success');
+      loadLeads();
+    } catch {} finally { btn.disabled = false; btn.textContent = 'Save Changes'; }
+  }
+
+  async function postUpdate() {
+    const text = el('new-update').value.trim();
+    if (!text) { showToast('Enter an update message.', 'warning'); return; }
+    const btn = el('post-update'); btn.disabled = true; btn.textContent = 'Posting…';
+    try {
+      await apiPost(`/api/crm/leads/${currentLead.id}/updates`, { update_text: text, visibility: el('new-vis').value });
+      showToast('Update posted.', 'success');
+      el('new-update').value = '';
+      loadUpdates(currentLead.id);
+    } catch {} finally { btn.disabled = false; btn.textContent = 'Post Update'; }
+  }
+
+  function closeSlide() { el('so-backdrop').classList.remove('open'); el('slideover').classList.remove('open'); }
+  el('so-close').onclick = closeSlide;
+  el('so-backdrop').onclick = closeSlide;
+
+  // Filters
+  el('status-pills').addEventListener('click', e => {
+    const p = e.target.closest('.pill'); if (!p) return;
+    document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    statusFilter = p.dataset.status;
+    loadLeads();
+  });
+  el('search').addEventListener('input', debounce(loadLeads, 350));
+  el('priority-filter').addEventListener('change', loadLeads);
+  el('emp-filter').addEventListener('change', loadLeads);
+
+  loadLeads();
+});
+</script>
+</body>
+</html>

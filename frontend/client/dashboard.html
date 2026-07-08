@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard — Nidhi Path</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="/client/dashboard.html" class="sidebar-logo">
+      <img src="/assets/img/logo.jpg" alt="NP" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text"><strong>NIDHI PATH</strong><small>Partner Portal</small></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">My Portal</div>
+      <a href="/client/dashboard.html"><span class="ico">📋</span> My Referrals</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user"><div class="avatar" data-user-avatar>C</div><div class="sidebar-user-info"><strong data-user-name>Client</strong><span data-user-role>Client Partner</span></div></div>
+      <button class="sidebar-logout" data-logout><span>↩</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="topbar-title">My Referrals</div><div class="topbar-sub">Track your referred students &amp; commission</div></div>
+      <div class="topbar-right"><div class="topbar-user"><div class="topbar-user-info"><strong data-user-name>Client</strong><span data-user-role>Client Partner</span></div><div class="avatar" data-user-avatar>C</div></div></div>
+    </header>
+
+    <main class="content">
+      <div class="stat-grid mb-4">
+        <div class="stat-card"><div class="stat-ico si-navy">📋</div><div><div class="stat-label">Total Referred</div><div class="stat-value" id="c-total">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-green">✅</div><div><div class="stat-label">Sanctioned</div><div class="stat-value" id="c-sanctioned">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-teal">💸</div><div><div class="stat-label">Disbursed</div><div class="stat-value" id="c-disbursed">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-red">❌</div><div><div class="stat-label">Rejected</div><div class="stat-value" id="c-rejected">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-gold">⏳</div><div><div class="stat-label">Commission Due</div><div class="stat-value" id="c-due">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-green">💰</div><div><div class="stat-label">Commission Paid</div><div class="stat-value" id="c-paid">—</div></div></div>
+      </div>
+
+      <div class="card card-flush">
+        <div class="card-head" style="padding:16px 20px;margin-bottom:0"><h2>Referred Students</h2></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Student</th><th>University</th><th>Status</th><th>Loan</th><th>Last Update</th><th></th></tr></thead>
+            <tbody id="c-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="modal-overlay" class="modal-overlay"></div>
+<div id="toast-container"></div>
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = window.Auth.requireAuth(['client']);
+  if (!user) return;
+  window.Auth.initShell(user);
+
+  let leadsCache = [];
+
+  try {
+    const [{ leads }, { summary }] = await Promise.all([
+      apiGet('/api/crm/leads?limit=200'),
+      apiGet('/api/commissions/summary'),
+    ]);
+    leadsCache = leads || [];
+
+    setText('c-total', leadsCache.length);
+    setText('c-sanctioned', leadsCache.filter(l => ['Sanctioned','Approved'].includes(l.lead_status)).length);
+    setText('c-disbursed', leadsCache.filter(l => l.lead_status==='Disbursed').length);
+    setText('c-rejected', leadsCache.filter(l => l.lead_status==='Rejected').length);
+    setText('c-due', formatCurrency(summary.total_due, true));
+    setText('c-paid', formatCurrency(summary.total_paid, true));
+
+    setHtml('c-body', leadsCache.length ? leadsCache.map(l => `
+      <tr>
+        <td><div class="cell-name"><div class="cell-avatar" style="background:${avatarColor(l.student?.full_name)}">${initials(l.student?.full_name)}</div><div class="cell-name-text"><strong>${escapeHtml(l.student?.full_name||'—')}</strong></div></div></td>
+        <td class="text-sm">${escapeHtml(l.university_applied||'—')}</td>
+        <td>${createStatusBadge(l.lead_status)}</td>
+        <td>${formatCurrency(l.loan_amount_needed, true)}</td>
+        <td class="text-sm muted">${formatDate(l.updated_at)}</td>
+        <td><button class="btn btn-outline btn-xs" onclick="viewLead('${l.id}')">View</button></td>
+      </tr>`).join('') : emptyState(6, 'No referred students yet.'));
+  } catch {}
+
+  window.viewLead = async (id) => {
+    const lead = leadsCache.find(l => l.id === id);
+    if (!lead) return;
+    showModal(`
+      <div class="modal-head"><h2>${escapeHtml(lead.student?.full_name||'Student')}</h2><button class="modal-close" data-close-modal>✕</button></div>
+      <div class="detail-grid mb-4">
+        <div class="detail-item"><div class="dl">University</div><div class="dv">${escapeHtml(lead.university_applied||'—')}</div></div>
+        <div class="detail-item"><div class="dl">Country</div><div class="dv">${escapeHtml(lead.country||'—')}</div></div>
+        <div class="detail-item"><div class="dl">Course</div><div class="dv">${escapeHtml(lead.course||'—')}</div></div>
+        <div class="detail-item"><div class="dl">Bank</div><div class="dv">${escapeHtml(lead.bank_applied||'—')}</div></div>
+        <div class="detail-item"><div class="dl">Loan Needed</div><div class="dv">${formatCurrency(lead.loan_amount_needed,true)}</div></div>
+        <div class="detail-item"><div class="dl">Status</div><div class="dv">${createStatusBadge(lead.lead_status)}</div></div>
+      </div>
+      <div class="so-section-title">Updates</div>
+      <div class="timeline" id="modal-timeline"><p class="text-sm muted">Loading…</p></div>
+      <div class="form-section">
+        <div class="field"><label>Reply to latest update</label><textarea class="textarea" id="reply-text" rows="2" placeholder="Type your reply…"></textarea></div>
+        <button class="btn btn-primary btn-sm" id="send-reply" disabled>Send Reply</button>
+      </div>
+    `, { size: 'lg' });
+
+    try {
+      const { updates } = await apiGet(`/api/crm/leads/${id}/updates`);
+      const tl = el('modal-timeline');
+      tl.innerHTML = updates.length ? updates.map(u => `
+        <div class="tl-item client_visible">
+          <div class="tl-head"><span class="tl-poster">Nidhi Path Team</span><span class="tl-meta">${timeAgo(u.created_at)}</span></div>
+          <div class="tl-text">${escapeHtml(u.update_text)}</div>
+          ${(u.replies&&u.replies.length)?`<div class="tl-replies">${u.replies.map(r=>`<div class="tl-reply"><div class="by">${escapeHtml(r.replier?.full_name||'You')}</div><div class="txt">${escapeHtml(r.reply_text)}</div></div>`).join('')}</div>`:''}
+        </div>`).join('') : '<p class="text-sm muted">No client-visible updates yet.</p>';
+
+      // Enable reply to most recent update
+      const latest = updates[0];
+      const btn = el('send-reply');
+      if (latest) {
+        btn.disabled = false;
+        btn.onclick = async () => {
+          const text = el('reply-text').value.trim();
+          if (!text) { showToast('Enter a reply.', 'warning'); return; }
+          btn.disabled = true; btn.textContent = 'Sending…';
+          try {
+            await apiPost(`/api/crm/updates/${latest.id}/reply`, { reply_text: text });
+            showToast('Reply sent.', 'success');
+            closeModal();
+          } catch { btn.disabled = false; btn.textContent = 'Send Reply'; }
+        };
+      }
+    } catch {}
+  };
+});
+</script>
+</body>
+</html>

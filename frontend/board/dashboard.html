@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Dashboard — Nidhi Path</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="/board/dashboard.html" class="sidebar-logo">
+      <img src="/assets/img/logo.jpg" alt="NP" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text"><strong>NIDHI PATH</strong><small>Board View</small></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Intelligence</div>
+      <a href="/board/dashboard.html"><span class="ico">📊</span> Overview</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user"><div class="avatar" data-user-avatar>B</div><div class="sidebar-user-info"><strong data-user-name>Board</strong><span data-user-role>Board Member</span></div></div>
+      <button class="sidebar-logout" data-logout><span>↩</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="topbar-title">Board Dashboard</div><div class="topbar-sub">Executive read-only intelligence</div></div>
+      <div class="topbar-right">
+        <span class="status-badge badge-assigned">🔒 Read-Only</span>
+        <div class="topbar-user"><div class="topbar-user-info"><strong data-user-name>Board</strong><span data-user-role>Board Member</span></div><div class="avatar" data-user-avatar>B</div></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="readonly-banner"><span>🔒</span> You have read-only access. Board members can view all reports but cannot create users, edit leads, or post updates.</div>
+
+      <!-- Stat cards -->
+      <div class="stat-grid mb-4">
+        <div class="stat-card"><div class="stat-ico si-navy">📋</div><div><div class="stat-label">Total Leads</div><div class="stat-value" id="b-total">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-blue">⚡</div><div><div class="stat-label">Active Files</div><div class="stat-value" id="b-active">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-green">✅</div><div><div class="stat-label">Sanctioned</div><div class="stat-value" id="b-sanctioned">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-teal">💸</div><div><div class="stat-label">Disbursed</div><div class="stat-value" id="b-disbursed">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-red">⏳</div><div><div class="stat-label">Commission Due</div><div class="stat-value" id="b-comm-due">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-gold">💰</div><div><div class="stat-label">Commission Paid</div><div class="stat-value" id="b-comm-paid">—</div></div></div>
+      </div>
+
+      <div class="grid-2 mb-4">
+        <div class="card"><div class="card-head"><h2>Lead Funnel</h2></div><div class="funnel" id="b-funnel"></div></div>
+        <div class="card"><div class="card-head"><h2>Employee Leaderboard</h2></div><div class="leaderboard" id="b-leaderboard"></div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-flush">
+          <div class="card-head" style="padding:16px 20px;margin-bottom:0"><h2>Commission Summary</h2></div>
+          <div class="table-wrap"><table class="table"><thead><tr><th>Client</th><th>Earned</th><th>Due</th><th>Paid</th></tr></thead><tbody id="b-comm"></tbody></table></div>
+        </div>
+        <div class="card"><div class="card-head"><h2>Smart Alerts</h2></div><div class="alert-list" id="b-alerts"></div></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = window.Auth.requireAuth(['board_member']);
+  if (!user) return;
+  window.Auth.initShell(user);
+
+  try {
+    const [overview, perf, commRep, funnelRep] = await Promise.all([
+      apiGet('/api/reports/overview'),
+      apiGet('/api/reports/employee-performance'),
+      apiGet('/api/reports/commission-summary'),
+      apiGet('/api/reports/funnel'),
+    ]);
+
+    const sc = overview.status_counts || {};
+    setText('b-total', overview.total_leads||0);
+    setText('b-active', overview.active||0);
+    setText('b-sanctioned', (sc['Sanctioned']||0)+(sc['Approved']||0));
+    setText('b-disbursed', sc['Disbursed']||0);
+    setText('b-comm-due', formatCurrency(overview.commissions.total_due, true));
+    setText('b-comm-paid', formatCurrency(overview.commissions.total_paid, true));
+
+    // Funnel
+    const max = Math.max(...funnelRep.funnel.map(f=>f.count), 1);
+    setHtml('b-funnel', funnelRep.funnel.filter(f=>f.count>0 || ['New','Sanctioned','Disbursed','Rejected'].includes(f.stage)).map(f =>
+      `<div class="funnel-row"><div class="funnel-label">${escapeHtml(f.stage)}</div><div class="funnel-track"><div class="funnel-fill" style="width:${Math.round(f.count/max*100)}%"></div></div><div class="funnel-count">${f.count}</div></div>`).join(''));
+
+    // Leaderboard
+    const ep = perf.performance || [];
+    const rc = ['gold','silver','bronze'];
+    setHtml('b-leaderboard', ep.length ? ep.slice(0,8).map((e,i) =>
+      `<div class="lb-row"><div class="lb-rank ${rc[i]||''}">${i+1}</div><div class="lb-name">${escapeHtml(e.name)}</div><div class="text-sm muted">${e.assigned_count} leads</div><div class="lb-score">${e.conversion_rate}%</div></div>`).join('') : '<p class="text-sm muted text-center" style="padding:20px">No employee data.</p>');
+
+    // Commission table
+    setHtml('b-comm', commRep.by_client.length ? commRep.by_client.slice(0,10).map(c =>
+      `<tr><td><strong>${escapeHtml(c.client_name)}</strong></td><td>${formatCurrency(c.earned,true)}</td><td class="text-danger">${formatCurrency(c.due,true)}</td><td class="text-green">${formatCurrency(c.paid,true)}</td></tr>`).join('') : emptyState(4, 'No commission data.'));
+
+    // Alerts
+    const alerts = overview.alerts || [];
+    const ico = { danger:'🚨', warning:'⚠️', info:'ℹ️', success:'✅' };
+    setHtml('b-alerts', alerts.length ? alerts.map(a =>
+      `<div class="alert-item ${a.type}"><span class="alert-ico">${ico[a.type]||'ℹ️'}</span><span class="alert-txt">${escapeHtml(a.text)}</span></div>`).join('') : '<div class="empty-state"><div class="empty-icon">✅</div><p>No alerts.</p></div>');
+
+  } catch {}
+});
+</script>
+</body>
+</html>

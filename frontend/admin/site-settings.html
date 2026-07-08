@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Settings — Nidhi Path SmartCRM</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="/admin/dashboard.html" class="sidebar-logo">
+      <img src="/assets/img/logo.jpg" alt="NP" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text"><strong>NIDHI PATH</strong><small>SmartCRM</small></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="/admin/dashboard.html"><span class="ico">📊</span> Dashboard</a>
+      <a href="/admin/crm.html"><span class="ico">📋</span> CRM Leads</a>
+      <a href="/admin/users.html"><span class="ico">👥</span> Users</a>
+      <div class="sidebar-section">Finance</div>
+      <a href="/admin/commissions.html"><span class="ico">💰</span> Commissions</a>
+      <a href="/admin/reports.html"><span class="ico">📈</span> Reports</a>
+      <div class="sidebar-section">System</div>
+      <a href="/admin/site-settings.html"><span class="ico">⚙️</span> Site Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user"><div class="avatar" data-user-avatar>A</div><div class="sidebar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div></div>
+      <button class="sidebar-logout" data-logout><span>↩</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="topbar-title">Site Settings</div><div class="topbar-sub">Business configuration</div></div>
+      <div class="topbar-right"><div class="topbar-user"><div class="topbar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div><div class="avatar" data-user-avatar>A</div></div></div>
+    </header>
+
+    <main class="content">
+      <div class="card" style="max-width:760px">
+        <form id="settings-form">
+          <div class="form-section">
+            <div class="form-section-title">Business Identity</div>
+            <div class="form-grid-2">
+              <div class="field"><label>Business Name</label><input class="input" name="business_name"></div>
+              <div class="field"><label>Tagline</label><input class="input" name="tagline"></div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-title">Contact</div>
+            <div class="form-grid-2">
+              <div class="field"><label>Email</label><input class="input" name="official_email" type="email"></div>
+              <div class="field"><label>Phone</label><input class="input" name="official_phone"></div>
+            </div>
+            <div class="form-grid-2">
+              <div class="field"><label>Website</label><input class="input" name="official_website"></div>
+              <div class="field"><label>Working Hours</label><input class="input" name="working_hours"></div>
+            </div>
+            <div class="field"><label>Address</label><input class="input" name="address"></div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-title">Messaging</div>
+            <div class="field"><label>Support Message</label><textarea class="textarea" name="support_message" rows="2"></textarea></div>
+            <div class="field"><label>Footer Text</label><textarea class="textarea" name="footer_text" rows="2"></textarea></div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-title">SEO</div>
+            <div class="field"><label>SEO Title</label><input class="input" name="seo_title"></div>
+            <div class="field"><label>SEO Description</label><textarea class="textarea" name="seo_description" rows="2"></textarea></div>
+          </div>
+          <div class="form-section">
+            <button type="submit" class="btn btn-primary" id="save-btn">Save Settings</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = window.Auth.requireAuth(['admin']);
+  if (!user) return;
+  window.Auth.initShell(user);
+
+  const form = el('settings-form');
+
+  try {
+    const { settings } = await apiGet('/api/site/settings');
+    Object.entries(settings || {}).forEach(([k, v]) => {
+      const input = form.elements[k];
+      if (input) input.value = v || '';
+    });
+  } catch {}
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = el('save-btn'); btn.disabled = true; btn.textContent = 'Saving…';
+    const data = Object.fromEntries(new FormData(form).entries());
+    try {
+      await apiPost('/api/site/settings', data);
+      showToast('Settings saved successfully.', 'success');
+    } catch {} finally { btn.disabled = false; btn.textContent = 'Save Settings'; }
+  });
+});
+</script>
+</body>
+</html>

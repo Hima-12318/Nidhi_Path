@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users — Nidhi Path SmartCRM</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="/admin/dashboard.html" class="sidebar-logo">
+      <img src="/assets/img/logo.jpg" alt="NP" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text"><strong>NIDHI PATH</strong><small>SmartCRM</small></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="/admin/dashboard.html"><span class="ico">📊</span> Dashboard</a>
+      <a href="/admin/crm.html"><span class="ico">📋</span> CRM Leads</a>
+      <a href="/admin/users.html"><span class="ico">👥</span> Users</a>
+      <div class="sidebar-section">Finance</div>
+      <a href="/admin/commissions.html"><span class="ico">💰</span> Commissions</a>
+      <a href="/admin/reports.html"><span class="ico">📈</span> Reports</a>
+      <div class="sidebar-section">System</div>
+      <a href="/admin/site-settings.html"><span class="ico">⚙️</span> Site Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user"><div class="avatar" data-user-avatar>A</div><div class="sidebar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div></div>
+      <button class="sidebar-logout" data-logout><span>↩</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="topbar-title">Users</div><div class="topbar-sub">Manage all platform accounts</div></div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" id="btn-create">+ Create User</button>
+        <div class="topbar-user"><div class="topbar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div><div class="avatar" data-user-avatar>A</div></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- Category cards -->
+      <div class="stat-grid mb-4">
+        <div class="stat-card cursor-pointer" data-cat="student"><div class="stat-ico si-green">🎓</div><div><div class="stat-label">Students</div><div class="stat-value" id="cnt-student">—</div></div></div>
+        <div class="stat-card cursor-pointer" data-cat="client"><div class="stat-ico si-gold">🤝</div><div><div class="stat-label">Clients</div><div class="stat-value" id="cnt-client">—</div></div></div>
+        <div class="stat-card cursor-pointer" data-cat="employee"><div class="stat-ico si-blue">💼</div><div><div class="stat-label">Employees</div><div class="stat-value" id="cnt-employee">—</div></div></div>
+        <div class="stat-card cursor-pointer" data-cat="board_member"><div class="stat-ico si-purple">📊</div><div><div class="stat-label">Board Members</div><div class="stat-value" id="cnt-board">—</div></div></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" id="cat-tabs">
+        <button class="tab active" data-tab="student">Students</button>
+        <button class="tab" data-tab="client">Clients</button>
+        <button class="tab" data-tab="employee">Employees</button>
+        <button class="tab" data-tab="board_member">Board Members</button>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="search-box"><span class="ico">🔍</span><input id="search" placeholder="Search name, email, mobile…"></div>
+        <select class="filter-sel" id="status-filter">
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="suspended">Suspended</option>
+        </select>
+        <select class="filter-sel hidden" id="ctype-filter">
+          <option value="">All Types</option>
+          <option value="connector">Connector</option>
+          <option value="consultant">Consultant</option>
+          <option value="self_own">Self / Own</option>
+          <option value="employee_reference">Employee Reference</option>
+          <option value="online_reference">Online Reference</option>
+          <option value="banker_reference">Banker Reference</option>
+        </select>
+      </div>
+
+      <!-- Table -->
+      <div class="card card-flush">
+        <div class="table-wrap">
+          <table class="table">
+            <thead id="table-head"></thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="modal-overlay" class="modal-overlay"></div>
+<div id="toast-container"></div>
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = window.Auth.requireAuth(['admin']);
+  if (!user) return;
+  window.Auth.initShell(user);
+
+  let currentCat = 'student';
+  let clientsCache = [], employeesCache = [];
+
+  // Load counts
+  async function loadCounts() {
+    try {
+      const [s, c, e, b] = await Promise.all([
+        apiGet('/api/users/students?limit=1'),
+        apiGet('/api/users/clients?limit=1'),
+        apiGet('/api/users/employees?limit=1'),
+        apiGet('/api/users/board?limit=1'),
+      ]);
+      setText('cnt-student', s.total ?? '0');
+      setText('cnt-client', c.total ?? '0');
+      setText('cnt-employee', e.total ?? '0');
+      setText('cnt-board', b.total ?? '0');
+    } catch {}
+  }
+
+  // Load dropdowns for create form
+  async function loadDropdowns() {
+    try {
+      const [c, e] = await Promise.all([apiGet('/api/users/dropdown/clients'), apiGet('/api/users/dropdown/employees')]);
+      clientsCache = c.clients || [];
+      employeesCache = e.employees || [];
+    } catch {}
+  }
+
+  const HEADS = {
+    student:      '<tr><th>Student</th><th>University</th><th>Loan Needed</th><th>Status (Lead)</th><th>Account</th><th>Actions</th></tr>',
+    client:       '<tr><th>Client</th><th>Type</th><th>Leads</th><th>Commission</th><th>Account</th><th>Actions</th></tr>',
+    employee:     '<tr><th>Employee</th><th>Designation</th><th>Assigned</th><th>Account</th><th>Created</th><th>Actions</th></tr>',
+    board_member: '<tr><th>Board Member</th><th>Designation</th><th>Email</th><th>Account</th><th>Created</th><th>Actions</th></tr>',
+  };
+
+  async function loadTable() {
+    el('table-head').innerHTML = HEADS[currentCat];
+    el('table-body').innerHTML = loadingRow(6);
+    const search = el('search').value.trim();
+    const status = el('status-filter').value;
+    const ctype  = el('ctype-filter').value;
+
+    try {
+      let rows = [];
+      if (currentCat === 'student') {
+        const r = await apiGet('/api/users/students' + qs({ search, status }));
+        rows = r.students || [];
+        el('table-body').innerHTML = rows.length ? rows.map(u => {
+          const sd = (u.student_details && u.student_details[0]) || {};
+          return `<tr>
+            <td><div class="cell-name"><div class="cell-avatar" style="background:${avatarColor(u.full_name)}">${initials(u.full_name)}</div><div class="cell-name-text"><strong>${escapeHtml(u.full_name)}</strong><span>${escapeHtml(u.email)}</span></div></div></td>
+            <td class="text-sm">${escapeHtml(sd.university_applied||'—')}</td>
+            <td>${formatCurrency(sd.loan_amount_needed, true)}</td>
+            <td>${createStatusBadge(sd.lead_status||'New')}</td>
+            <td><span class="status-badge ${u.status==='active'?'badge-sanctioned':'badge-closed'}">${escapeHtml(u.status)}</span></td>
+            <td>${actionBtns(u)}</td></tr>`;
+        }).join('') : emptyState(6, 'No students found.');
+      } else if (currentCat === 'client') {
+        const r = await apiGet('/api/users/clients' + qs({ search, status, type: ctype }));
+        rows = r.clients || [];
+        el('table-body').innerHTML = rows.length ? rows.map(u => `<tr>
+            <td><div class="cell-name"><div class="cell-avatar" style="background:${avatarColor(u.full_name)}">${initials(u.full_name)}</div><div class="cell-name-text"><strong>${escapeHtml(u.full_name)}</strong><span>${escapeHtml(u.email)}</span></div></div></td>
+            <td><span class="chip chip-${u.client_type||'self_own'}">${escapeHtml(clientTypeLabel(u.client_type))}</span></td>
+            <td>${u.total_leads||0}</td>
+            <td class="text-sm">${u.commission_type==='percentage'?`${u.commission_percentage}%`:u.commission_type==='fixed'?formatCurrency(u.commission_fixed_amount,true):'—'}</td>
+            <td><span class="status-badge ${u.status==='active'?'badge-sanctioned':'badge-closed'}">${escapeHtml(u.status)}</span></td>
+            <td>${actionBtns(u)}</td></tr>`).join('') : emptyState(6, 'No clients found.');
+      } else if (currentCat === 'employee') {
+        const r = await apiGet('/api/users/employees' + qs({ search, status }));
+        rows = r.employees || [];
+        el('table-body').innerHTML = rows.length ? rows.map(u => `<tr>
+            <td><div class="cell-name"><div class="cell-avatar" style="background:${avatarColor(u.full_name)}">${initials(u.full_name)}</div><div class="cell-name-text"><strong>${escapeHtml(u.full_name)}</strong><span>${escapeHtml(u.email)}</span></div></div></td>
+            <td class="text-sm">${escapeHtml(u.designation||'—')}</td>
+            <td>${u.assigned_leads||0}</td>
+            <td><span class="status-badge ${u.status==='active'?'badge-sanctioned':'badge-closed'}">${escapeHtml(u.status)}</span></td>
+            <td class="text-sm muted">${formatDate(u.created_at)}</td>
+            <td>${actionBtns(u)}</td></tr>`).join('') : emptyState(6, 'No employees found.');
+      } else {
+        const r = await apiGet('/api/users/board' + qs({ status }));
+        rows = r.board_members || [];
+        el('table-body').innerHTML = rows.length ? rows.map(u => `<tr>
+            <td><div class="cell-name"><div class="cell-avatar" style="background:${avatarColor(u.full_name)}">${initials(u.full_name)}</div><div class="cell-name-text"><strong>${escapeHtml(u.full_name)}</strong><span>${escapeHtml(u.email)}</span></div></div></td>
+            <td class="text-sm">${escapeHtml(u.designation||'—')}</td>
+            <td class="text-sm">${escapeHtml(u.email)}</td>
+            <td><span class="status-badge ${u.status==='active'?'badge-sanctioned':'badge-closed'}">${escapeHtml(u.status)}</span></td>
+            <td class="text-sm muted">${formatDate(u.created_at)}</td>
+            <td>${actionBtns(u)}</td></tr>`).join('') : emptyState(6, 'No board members found.');
+      }
+    } catch { el('table-body').innerHTML = emptyState(6, 'Failed to load.'); }
+  }
+
+  function actionBtns(u) {
+    const deact = u.status === 'active'
+      ? `<button class="btn btn-ghost btn-xs" onclick="deactivate('${u.id}','${escapeHtml(u.full_name)}')">Deactivate</button>`
+      : `<button class="btn btn-ghost btn-xs" onclick="reactivate('${u.id}')">Reactivate</button>`;
+    return `<div class="flex gap-2"><button class="btn btn-outline btn-xs" onclick="editUser('${u.id}')">Edit</button>${deact}</div>`;
+  }
+
+  window.deactivate = async (id, name) => {
+    if (!confirm(`Deactivate ${name}? They will no longer be able to log in.`)) return;
+    try { await apiDelete('/api/users/' + id); showToast('User deactivated.', 'success'); loadTable(); loadCounts(); } catch {}
+  };
+  window.reactivate = async (id) => {
+    try { await apiPatch('/api/users/' + id, { status: 'active' }); showToast('User reactivated.', 'success'); loadTable(); } catch {}
+  };
+  window.editUser = async (id) => {
+    try {
+      const r = await apiGet('/api/users/' + id);
+      const u = r.user;
+      showModal(`
+        <div class="modal-head"><h2>Edit User</h2><button class="modal-close" data-close-modal>✕</button></div>
+        <form id="edit-form">
+          <div class="field"><label>Full Name</label><input class="input" name="full_name" value="${escapeHtml(u.full_name)}"></div>
+          <div class="field"><label>Mobile</label><input class="input" name="mobile" value="${escapeHtml(u.mobile||'')}"></div>
+          <div class="field"><label>Status</label><select class="select" name="status">
+            <option value="active" ${u.status==='active'?'selected':''}>Active</option>
+            <option value="inactive" ${u.status==='inactive'?'selected':''}>Inactive</option>
+            <option value="suspended" ${u.status==='suspended'?'selected':''}>Suspended</option>
+          </select></div>
+          ${u.role==='client'?`<div class="field"><label>Commission %</label><input class="input" name="commission_percentage" type="number" value="${u.commission_percentage||0}"></div>`:''}
+        </form>
+        <div class="modal-foot"><button class="btn btn-ghost" data-close-modal>Cancel</button><button class="btn btn-primary" id="save-edit">Save</button></div>
+      `);
+      el('save-edit').onclick = async () => {
+        const data = Object.fromEntries(new FormData(el('edit-form')).entries());
+        try { await apiPatch('/api/users/' + id, data); showToast('User updated.', 'success'); closeModal(); loadTable(); } catch {}
+      };
+    } catch {}
+  };
+
+  // Create user modal
+  el('btn-create').onclick = () => openCreateModal();
+
+  function openCreateModal() {
+    showModal(`
+      <div class="modal-head"><h2>Create User</h2><button class="modal-close" data-close-modal>✕</button></div>
+      <div class="field"><label>User Type</label>
+        <select class="select" id="new-role">
+          <option value="student">Student / Lead</option>
+          <option value="client">Client</option>
+          <option value="employee">Employee</option>
+          <option value="board">Board Member</option>
+        </select>
+      </div>
+      <form id="create-form"></form>
+      <div class="modal-foot"><button class="btn btn-ghost" data-close-modal>Cancel</button><button class="btn btn-primary" id="save-create">Create</button></div>
+    `, { size: 'lg' });
+    el('new-role').onchange = () => renderCreateFields(el('new-role').value);
+    renderCreateFields('student');
+    el('save-create').onclick = submitCreate;
+  }
+
+  function clientOpts() { return '<option value="">None / Self</option>' + clientsCache.map(c => `<option value="${c.id}">${escapeHtml(c.full_name)} (${clientTypeLabel(c.client_type)})</option>`).join(''); }
+  function empOpts() { return '<option value="">Unassigned</option>' + employeesCache.map(e => `<option value="${e.id}">${escapeHtml(e.full_name)}</option>`).join(''); }
+
+  function renderCreateFields(type) {
+    const common = `
+      <div class="form-grid-2">
+        <div class="field"><label>Full Name *</label><input class="input" name="full_name" required></div>
+        <div class="field"><label>Email *</label><input class="input" name="email" type="email" required></div>
+      </div>
+      <div class="form-grid-2">
+        <div class="field"><label>Mobile</label><input class="input" name="mobile"></div>
+        <div class="field"><label>Temporary Password *</label><input class="input" name="temporaryPassword" type="text" minlength="8" placeholder="Min 8 chars" required></div>
+      </div>`;
+    let extra = '';
+    if (type === 'student') {
+      extra = `
+        <div class="form-grid-3">
+          <div class="field"><label>University</label><input class="input" name="university_applied"></div>
+          <div class="field"><label>Country</label><input class="input" name="country"></div>
+          <div class="field"><label>Course</label><input class="input" name="course"></div>
+        </div>
+        <div class="form-grid-2">
+          <div class="field"><label>Loan Amount Needed (₹)</label><input class="input" name="loan_amount_needed" type="number"></div>
+          <div class="field"><label>Source Client</label><select class="select" name="source_client_id">${clientOpts()}</select></div>
+        </div>
+        <div class="form-grid-2">
+          <div class="field"><label>Assigned Employee</label><select class="select" name="assigned_employee_id">${empOpts()}</select></div>
+          <div class="field"><label>Lead Status</label><select class="select" name="lead_status"><option>New</option><option>Registered</option><option>Assigned</option></select></div>
+        </div>`;
+    } else if (type === 'client') {
+      extra = `
+        <div class="form-grid-2">
+          <div class="field"><label>Client Type *</label>
+            <select class="select" name="client_type" id="ct-sel" required>
+              <option value="connector">Connector</option>
+              <option value="consultant">Consultant</option>
+              <option value="self_own">Self / Own</option>
+              <option value="employee_reference">Employee Reference</option>
+              <option value="online_reference">Online Reference</option>
+              <option value="banker_reference">Banker Reference</option>
+            </select>
+          </div>
+          <div class="field"><label>Company / Organisation</label><input class="input" name="company_name"></div>
+        </div>
+        <div class="form-grid-3" id="comm-fields">
+          <div class="field"><label>Commission Type</label><select class="select" name="commission_type"><option value="not_applicable">N/A</option><option value="percentage">Percentage</option><option value="fixed">Fixed</option></select></div>
+          <div class="field"><label>Commission %</label><input class="input" name="commission_percentage" type="number" step="0.01"></div>
+          <div class="field"><label>Fixed Amount (₹)</label><input class="input" name="commission_fixed_amount" type="number"></div>
+        </div>
+        <div class="form-grid-2">
+          <div class="field"><label>City</label><input class="input" name="city"></div>
+          <div class="field"><label>State</label><input class="input" name="state"></div>
+        </div>`;
+    } else if (type === 'employee') {
+      extra = `<div class="form-grid-2">
+        <div class="field"><label>Designation</label><input class="input" name="designation" placeholder="e.g. Senior CRM Executive"></div>
+        <div class="field"><label>Department</label><input class="input" name="department"></div>
+      </div>`;
+    } else {
+      extra = `<div class="field"><label>Designation</label><input class="input" name="designation" placeholder="e.g. Director"></div>
+        <p class="text-sm muted">Board members get read-only access to all reports.</p>`;
+    }
+    el('create-form').innerHTML = common + extra;
+  }
+
+  async function submitCreate() {
+    const type = el('new-role').value;
+    const data = Object.fromEntries(new FormData(el('create-form')).entries());
+    if (!data.full_name || !data.email || !data.temporaryPassword) { showToast('Fill all required fields.', 'warning'); return; }
+    const endpoint = { student:'/api/users/student', client:'/api/users/client', employee:'/api/users/employee', board:'/api/users/board' }[type];
+    const btn = el('save-create'); btn.disabled = true; btn.textContent = 'Creating…';
+    try {
+      const r = await apiPost(endpoint, data);
+      showToast(r.message || 'User created.', 'success');
+      closeModal();
+      loadCounts(); loadDropdowns();
+      if (type === currentCat || (type==='board' && currentCat==='board_member')) loadTable();
+    } catch { btn.disabled = false; btn.textContent = 'Create'; }
+  }
+
+  // Tab + filter wiring
+  el('cat-tabs').addEventListener('click', e => {
+    const t = e.target.closest('.tab'); if (!t) return;
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    currentCat = t.dataset.tab;
+    el('ctype-filter').classList.toggle('hidden', currentCat !== 'client');
+    loadTable();
+  });
+  document.querySelectorAll('[data-cat]').forEach(card => card.addEventListener('click', () => {
+    const cat = card.dataset.cat;
+    document.querySelector(`.tab[data-tab="${cat}"]`)?.click();
+  }));
+  el('search').addEventListener('input', debounce(loadTable, 350));
+  el('status-filter').addEventListener('change', loadTable);
+  el('ctype-filter').addEventListener('change', loadTable);
+
+  await Promise.all([loadCounts(), loadDropdowns()]);
+  loadTable();
+});
+</script>
+</body>
+</html>

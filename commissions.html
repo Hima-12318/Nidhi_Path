@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commissions — Nidhi Path SmartCRM</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="/admin/dashboard.html" class="sidebar-logo">
+      <img src="/assets/img/logo.jpg" alt="NP" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text"><strong>NIDHI PATH</strong><small>SmartCRM</small></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="/admin/dashboard.html"><span class="ico">📊</span> Dashboard</a>
+      <a href="/admin/crm.html"><span class="ico">📋</span> CRM Leads</a>
+      <a href="/admin/users.html"><span class="ico">👥</span> Users</a>
+      <div class="sidebar-section">Finance</div>
+      <a href="/admin/commissions.html"><span class="ico">💰</span> Commissions</a>
+      <a href="/admin/reports.html"><span class="ico">📈</span> Reports</a>
+      <div class="sidebar-section">System</div>
+      <a href="/admin/site-settings.html"><span class="ico">⚙️</span> Site Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user"><div class="avatar" data-user-avatar>A</div><div class="sidebar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div></div>
+      <button class="sidebar-logout" data-logout><span>↩</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="topbar-title">Commissions</div><div class="topbar-sub">Partner commission tracking</div></div>
+      <div class="topbar-right"><div class="topbar-user"><div class="topbar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div><div class="avatar" data-user-avatar>A</div></div></div>
+    </header>
+
+    <main class="content">
+      <!-- Summary cards -->
+      <div class="stat-grid mb-4">
+        <div class="stat-card"><div class="stat-ico si-navy">💵</div><div><div class="stat-label">Total Earned</div><div class="stat-value" id="sum-earned">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-red">⏳</div><div><div class="stat-label">Total Due</div><div class="stat-value" id="sum-due">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-green">✅</div><div><div class="stat-label">Total Paid</div><div class="stat-value" id="sum-paid">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-orange">🔒</div><div><div class="stat-label">On Hold</div><div class="stat-value" id="sum-hold">—</div></div></div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <select class="filter-sel" id="status-filter">
+          <option value="">All Statuses</option>
+          <option value="Due">Due</option><option value="Paid">Paid</option>
+          <option value="Hold">Hold</option><option value="Not Applicable">Not Applicable</option>
+        </select>
+      </div>
+
+      <!-- Table -->
+      <div class="card card-flush">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Student</th><th>Client</th><th>Type</th><th>Earned</th><th>Due</th><th>Paid</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="comm-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="modal-overlay" class="modal-overlay"></div>
+<div id="toast-container"></div>
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = window.Auth.requireAuth(['admin']);
+  if (!user) return;
+  window.Auth.initShell(user);
+
+  async function loadSummary() {
+    try {
+      const { summary } = await apiGet('/api/commissions/summary');
+      setText('sum-earned', formatCurrency(summary.total_earned, true));
+      setText('sum-due', formatCurrency(summary.total_due, true));
+      setText('sum-paid', formatCurrency(summary.total_paid, true));
+      setText('sum-hold', summary.by_status?.Hold || 0);
+    } catch {}
+  }
+
+  async function loadTable() {
+    el('comm-body').innerHTML = loadingRow(8);
+    const status = el('status-filter').value;
+    try {
+      const { commissions } = await apiGet('/api/commissions' + qs({ status, limit: 200 }));
+      el('comm-body').innerHTML = commissions.length ? commissions.map(c => `
+        <tr>
+          <td>${escapeHtml(c.student?.full_name||'—')}</td>
+          <td>${escapeHtml(c.client?.full_name||'—')}<br><span class="chip chip-${c.client?.client_type||'self_own'}">${clientTypeLabel(c.client?.client_type)}</span></td>
+          <td class="text-sm">${c.commission_type==='percentage'?`${c.commission_percentage}%`:c.commission_type==='fixed'?'Fixed':'N/A'}</td>
+          <td class="fw-600">${formatCurrency(c.commission_earned, true)}</td>
+          <td class="${Number(c.commission_due)>0?'text-danger fw-700':''}">${formatCurrency(c.commission_due, true)}</td>
+          <td class="text-green fw-600">${formatCurrency(c.commission_paid, true)}</td>
+          <td>${commStatusBadge(c.commission_status)}</td>
+          <td>${c.commission_status==='Due'?`<button class="btn btn-green btn-xs" onclick="markPaid('${c.id}','${c.commission_earned}')">Mark Paid</button>`:''}
+              <button class="btn btn-outline btn-xs" onclick="editComm('${c.id}','${c.commission_earned}','${c.commission_paid}')">Edit</button></td>
+        </tr>`).join('') : emptyState(8, 'No commission records.');
+    } catch { el('comm-body').innerHTML = emptyState(8, 'Failed to load.'); }
+  }
+
+  window.markPaid = (id, earned) => {
+    showModal(`
+      <div class="modal-head"><h2>Mark as Paid</h2><button class="modal-close" data-close-modal>✕</button></div>
+      <div class="field"><label>Amount Paid (₹)</label><input class="input" id="pay-amount" type="number" value="${earned}"></div>
+      <div class="field"><label>Payment Date</label><input class="input" id="pay-date" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+      <div class="field"><label>Reference</label><input class="input" id="pay-ref" placeholder="UTR / Transaction ID"></div>
+      <div class="modal-foot"><button class="btn btn-ghost" data-close-modal>Cancel</button><button class="btn btn-green" id="confirm-pay">Confirm Payment</button></div>
+    `);
+    el('confirm-pay').onclick = async () => {
+      try {
+        await apiPatch('/api/commissions/' + id, {
+          commission_status: 'Paid',
+          commission_paid: Number(el('pay-amount').value),
+          payment_date: el('pay-date').value,
+          payment_reference: el('pay-ref').value,
+        });
+        showToast('Payment recorded.', 'success');
+        closeModal(); loadSummary(); loadTable();
+      } catch {}
+    };
+  };
+
+  window.editComm = (id, earned, paid) => {
+    showModal(`
+      <div class="modal-head"><h2>Edit Commission</h2><button class="modal-close" data-close-modal>✕</button></div>
+      <div class="field"><label>Earned Amount (₹)</label><input class="input" id="ed-earned" type="number" value="${earned}"></div>
+      <div class="field"><label>Paid Amount (₹)</label><input class="input" id="ed-paid" type="number" value="${paid}"></div>
+      <div class="field"><label>Status</label><select class="select" id="ed-status"><option>Due</option><option>Paid</option><option>Hold</option><option>Not Applicable</option></select></div>
+      <div class="modal-foot"><button class="btn btn-ghost" data-close-modal>Cancel</button><button class="btn btn-primary" id="save-comm">Save</button></div>
+    `);
+    el('save-comm').onclick = async () => {
+      try {
+        await apiPatch('/api/commissions/' + id, {
+          commission_earned: Number(el('ed-earned').value),
+          commission_paid: Number(el('ed-paid').value),
+          commission_status: el('ed-status').value,
+        });
+        showToast('Commission updated.', 'success');
+        closeModal(); loadSummary(); loadTable();
+      } catch {}
+    };
+  };
+
+  el('status-filter').addEventListener('change', loadTable);
+  await loadSummary(); loadTable();
+});
+</script>
+</body>
+</html>

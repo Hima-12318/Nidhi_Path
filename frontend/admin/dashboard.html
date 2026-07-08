@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Nidhi Path SmartCRM</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="/admin/dashboard.html" class="sidebar-logo">
+      <img src="/assets/img/logo.jpg" alt="NP" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text"><strong>NIDHI PATH</strong><small>SmartCRM</small></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="/admin/dashboard.html"><span class="ico">📊</span> Dashboard</a>
+      <a href="/admin/crm.html"><span class="ico">📋</span> CRM Leads</a>
+      <a href="/admin/users.html"><span class="ico">👥</span> Users</a>
+      <div class="sidebar-section">Finance</div>
+      <a href="/admin/commissions.html"><span class="ico">💰</span> Commissions</a>
+      <a href="/admin/reports.html"><span class="ico">📈</span> Reports</a>
+      <div class="sidebar-section">System</div>
+      <a href="/admin/site-settings.html"><span class="ico">⚙️</span> Site Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="avatar" data-user-avatar>A</div>
+        <div class="sidebar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div>
+      </div>
+      <button class="sidebar-logout" data-logout><span>↩</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title">Dashboard</div>
+        <div class="topbar-sub">Business overview &amp; intelligence</div>
+      </div>
+      <div class="topbar-right">
+        <a href="/admin/crm.html" class="btn btn-primary btn-sm">+ New Lead</a>
+        <button class="topbar-bell">🔔<span class="dot"></span></button>
+        <div class="topbar-user">
+          <div class="topbar-user-info"><strong data-user-name>Admin</strong><span data-user-role>Administrator</span></div>
+          <div class="avatar" data-user-avatar>A</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- Stat cards -->
+      <div class="stat-grid mb-4">
+        <div class="stat-card"><div class="stat-ico si-navy">📋</div><div><div class="stat-label">Total Leads</div><div class="stat-value" id="s-total">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-blue">⚡</div><div><div class="stat-label">Active Files</div><div class="stat-value" id="s-active">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-green">✅</div><div><div class="stat-label">Sanctioned</div><div class="stat-value" id="s-sanctioned">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-teal">💸</div><div><div class="stat-label">Disbursed</div><div class="stat-value" id="s-disbursed">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-red">⚠️</div><div><div class="stat-label">Commission Due</div><div class="stat-value" id="s-comm-due">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-gold">💰</div><div><div class="stat-label">Commission Paid</div><div class="stat-value" id="s-comm-paid">—</div></div></div>
+      </div>
+
+      <!-- Funnel + Alerts -->
+      <div class="grid-2 mb-4">
+        <div class="card">
+          <div class="card-head"><h2>Lead Funnel</h2><a href="/admin/crm.html" class="btn btn-ghost btn-sm">Open CRM →</a></div>
+          <div class="funnel" id="funnel"><div class="empty-state"><div class="empty-icon">⏳</div><p>Loading…</p></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Smart Alerts</h2></div>
+          <div class="alert-list" id="alerts"><div class="empty-state"><div class="empty-icon">✅</div><p>No alerts.</p></div></div>
+        </div>
+      </div>
+
+      <!-- Recent leads + Employee perf -->
+      <div class="grid-2">
+        <div class="card card-flush">
+          <div class="card-head" style="padding:18px 22px 14px;margin-bottom:0"><h2>Recent Leads</h2></div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Student</th><th>Source</th><th>Status</th><th>Employee</th></tr></thead>
+              <tbody id="recent-leads"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card card-flush">
+          <div class="card-head" style="padding:18px 22px 14px;margin-bottom:0"><h2>Employee Performance</h2></div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Employee</th><th>Assigned</th><th>Updates</th><th>Conv.</th></tr></thead>
+              <tbody id="emp-perf"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = window.Auth.requireAuth(['admin']);
+  if (!user) return;
+  window.Auth.initShell(user);
+
+  try {
+    const [overview, perf, leadsRes] = await Promise.all([
+      apiGet('/api/reports/overview'),
+      apiGet('/api/reports/employee-performance'),
+      apiGet('/api/crm/leads?limit=10'),
+    ]);
+
+    // Stat cards
+    const sc = overview.status_counts || {};
+    setText('s-total', overview.total_leads || 0);
+    setText('s-active', overview.active || 0);
+    setText('s-sanctioned', (sc['Sanctioned'] || 0) + (sc['Approved'] || 0));
+    setText('s-disbursed', sc['Disbursed'] || 0);
+    setText('s-comm-due', formatCurrency(overview.commissions.total_due, true));
+    setText('s-comm-paid', formatCurrency(overview.commissions.total_paid, true));
+
+    // Funnel
+    const stages = ['New','Registered','Assigned','Documents Pending','Work Started','In Progress','Bank Review','Sanctioned','Disbursed','Rejected'];
+    const max = Math.max(...stages.map(s => sc[s] || 0), 1);
+    setHtml('funnel', stages.map(s => {
+      const c = sc[s] || 0;
+      return `<div class="funnel-row"><div class="funnel-label">${escapeHtml(s)}</div><div class="funnel-track"><div class="funnel-fill" style="width:${Math.round(c/max*100)}%"></div></div><div class="funnel-count">${c}</div></div>`;
+    }).join(''));
+
+    // Alerts
+    const alerts = overview.alerts || [];
+    if (alerts.length) {
+      const ico = { danger:'🚨', warning:'⚠️', info:'ℹ️', success:'✅' };
+      setHtml('alerts', alerts.map(a => `<div class="alert-item ${a.type}"><span class="alert-ico">${ico[a.type]||'ℹ️'}</span><span class="alert-txt">${escapeHtml(a.text)}</span></div>`).join(''));
+    }
+
+    // Recent leads
+    const leads = leadsRes.leads || [];
+    setHtml('recent-leads', leads.length ? leads.map(l => `
+      <tr>
+        <td><div class="cell-name"><div class="cell-avatar" style="background:${avatarColor(l.student?.full_name)}">${initials(l.student?.full_name)}</div><div class="cell-name-text"><strong>${escapeHtml(l.student?.full_name||'—')}</strong><span>${escapeHtml(l.university_applied||'')}</span></div></div></td>
+        <td><span class="chip chip-${l.source_client?.client_type||'self_own'}">${escapeHtml(clientTypeLabel(l.source_client?.client_type))}</span></td>
+        <td>${createStatusBadge(l.lead_status)}</td>
+        <td class="text-sm">${escapeHtml(l.assigned_employee?.full_name||'—')}</td>
+      </tr>`).join('') : emptyState(4, 'No leads yet.'));
+
+    // Employee performance
+    const ep = perf.performance || [];
+    setHtml('emp-perf', ep.length ? ep.slice(0,8).map(e => `
+      <tr>
+        <td><strong>${escapeHtml(e.name)}</strong></td>
+        <td>${e.assigned_count}</td>
+        <td>${e.updates_posted}</td>
+        <td><strong class="text-green">${e.conversion_rate}%</strong></td>
+      </tr>`).join('') : emptyState(4, 'No employees yet.'));
+
+  } catch (e) { /* toast already shown by api.js */ }
+});
+</script>
+</body>
+</html>

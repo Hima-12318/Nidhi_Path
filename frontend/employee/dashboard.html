@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Dashboard — Nidhi Path</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="/employee/dashboard.html" class="sidebar-logo">
+      <img src="/assets/img/logo.jpg" alt="NP" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text"><strong>NIDHI PATH</strong><small>Employee Portal</small></div>
+    </a>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">My Work</div>
+      <a href="/employee/dashboard.html"><span class="ico">📋</span> My Leads</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-user"><div class="avatar" data-user-avatar>E</div><div class="sidebar-user-info"><strong data-user-name>Employee</strong><span data-user-role>Employee</span></div></div>
+      <button class="sidebar-logout" data-logout><span>↩</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="topbar-title">My Dashboard</div><div class="topbar-sub">Assigned leads &amp; references</div></div>
+      <div class="topbar-right"><div class="topbar-user"><div class="topbar-user-info"><strong data-user-name>Employee</strong><span data-user-role>Employee</span></div><div class="avatar" data-user-avatar>E</div></div></div>
+    </header>
+
+    <main class="content">
+      <div class="stat-grid mb-4">
+        <div class="stat-card"><div class="stat-ico si-navy">📋</div><div><div class="stat-label">Assigned Leads</div><div class="stat-value" id="e-total">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-blue">⚡</div><div><div class="stat-label">In Progress</div><div class="stat-value" id="e-active">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-green">✅</div><div><div class="stat-label">Sanctioned</div><div class="stat-value" id="e-sanctioned">—</div></div></div>
+        <div class="stat-card"><div class="stat-ico si-purple">🏆</div><div><div class="stat-label">Incentives Pending</div><div class="stat-value" id="e-incentive">—</div></div></div>
+      </div>
+
+      <div class="pills" id="status-pills">
+        <button class="pill active" data-status="">All</button>
+        <button class="pill" data-status="New">New</button>
+        <button class="pill" data-status="In Progress">In Progress</button>
+        <button class="pill" data-status="Follow Up">Follow Up</button>
+        <button class="pill" data-status="Bank Review">Bank Review</button>
+        <button class="pill green" data-status="Sanctioned">Sanctioned</button>
+        <button class="pill red" data-status="Rejected">Rejected</button>
+      </div>
+
+      <div class="card card-flush mb-4">
+        <div class="card-head" style="padding:16px 20px;margin-bottom:0"><h2>My Assigned Leads</h2></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Student</th><th>University</th><th>Priority</th><th>Status</th><th>Follow-up</th><th></th></tr></thead>
+            <tbody id="e-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card card-flush">
+        <div class="card-head" style="padding:16px 20px;margin-bottom:0"><h2>My Employee References — Incentives</h2></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Student</th><th>Incentive Amount</th><th>Status</th><th>Payment Date</th></tr></thead>
+            <tbody id="incent-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Slide-over -->
+<div class="slideover-backdrop" id="so-backdrop"></div>
+<div class="slideover" id="slideover">
+  <div class="slideover-head"><div class="so-title"><h3 id="so-name">Lead</h3><p id="so-appid">—</p></div><button class="slideover-close" id="so-close">✕</button></div>
+  <div class="slideover-body" id="so-body"></div>
+</div>
+
+<div id="toast-container"></div>
+<script src="/assets/js/utils.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = window.Auth.requireAuth(['employee']);
+  if (!user) return;
+  window.Auth.initShell(user);
+
+  const STATUSES = ['New','Registered','Assigned','Verified','Documents Pending','Documents Received','Work Started','In Progress','Follow Up','Bank Review','Sanction In Progress','Sanctioned','Disbursed','Approved','Rejected','Closed'];
+  // Employee can post these visibility levels (NOT board_visible)
+  const VISIBILITY = [['internal_only','🔒 Internal Only'],['client_visible','👤 Client Visible'],['student_visible','🎓 Student Visible']];
+  let statusFilter = '', currentLead = null;
+
+  async function loadLeads() {
+    el('e-body').innerHTML = loadingRow(6);
+    try {
+      const { leads } = await apiGet('/api/crm/leads' + qs({ status: statusFilter, limit: 200 }));
+      setText('e-total', leads.length);
+      setText('e-active', leads.filter(l => l.lead_status==='In Progress').length);
+      setText('e-sanctioned', leads.filter(l => ['Sanctioned','Disbursed'].includes(l.lead_status)).length);
+      el('e-body').innerHTML = leads.length ? leads.map(l => `
+        <tr class="cursor-pointer" onclick="openLead('${l.id}')">
+          <td><div class="cell-name"><div class="cell-avatar" style="background:${avatarColor(l.student?.full_name)}">${initials(l.student?.full_name)}</div><div class="cell-name-text"><strong>${escapeHtml(l.student?.full_name||'—')}</strong><span>${escapeHtml(l.student?.mobile||'')}</span></div></div></td>
+          <td class="text-sm">${escapeHtml(l.university_applied||'—')}</td>
+          <td>${priorityBadge(l.priority)}</td>
+          <td>${createStatusBadge(l.lead_status)}</td>
+          <td class="text-sm muted">${formatDate(l.next_follow_up)}</td>
+          <td><button class="btn btn-outline btn-xs" onclick="event.stopPropagation();openLead('${l.id}')">Open</button></td>
+        </tr>`).join('') : emptyState(6, 'No assigned leads.');
+    } catch { el('e-body').innerHTML = emptyState(6, 'Failed to load.'); }
+  }
+
+  async function loadIncentives() {
+    try {
+      const { incentives } = await apiGet('/api/commissions/incentives/list');
+      const pending = incentives.filter(i => i.incentive_status==='Pending').reduce((s,i)=>s+Number(i.incentive_amount||0),0);
+      setText('e-incentive', formatCurrency(pending, true));
+      el('incent-body').innerHTML = incentives.length ? incentives.map(i => `
+        <tr>
+          <td>${escapeHtml(i.student?.full_name||'—')}</td>
+          <td class="fw-700">${formatCurrency(i.incentive_amount)}</td>
+          <td><span class="status-badge ${i.incentive_status==='Paid'?'cs-paid':'cs-due'}">${i.incentive_status}</span></td>
+          <td class="text-sm muted">${formatDate(i.payment_date)}</td>
+        </tr>`).join('') : emptyState(4, 'No employee references yet.');
+    } catch { el('incent-body').innerHTML = emptyState(4, 'No data.'); }
+  }
+
+  window.openLead = async (id) => {
+    el('so-backdrop').classList.add('open');
+    el('slideover').classList.add('open');
+    el('so-body').innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Loading…</p></div>';
+    try {
+      const { lead } = await apiGet('/api/crm/leads/' + id);
+      currentLead = lead;
+      el('so-name').textContent = lead.student?.full_name || 'Lead';
+      el('so-appid').textContent = lead.application_id || '—';
+      const info = [['Email',lead.student?.email],['Mobile',lead.student?.mobile],['University',lead.university_applied],['Country',lead.country],['Course',lead.course],['Loan Needed',formatCurrency(lead.loan_amount_needed,true)]];
+      el('so-body').innerHTML = `
+        <div class="so-section"><div class="so-section-title">Details</div><div class="detail-grid">${info.map(([l,v])=>`<div class="detail-item"><div class="dl">${escapeHtml(l)}</div><div class="dv">${escapeHtml(v||'—')}</div></div>`).join('')}</div></div>
+        <div class="so-section">
+          <div class="so-section-title">Update Lead</div>
+          <div class="form-grid-2">
+            <div class="field"><label>Status</label><select class="select" id="up-status">${STATUSES.map(s=>`<option ${s===lead.lead_status?'selected':''}>${s}</option>`).join('')}</select></div>
+            <div class="field"><label>Next Follow-up</label><input class="input" type="date" id="up-followup" value="${lead.next_follow_up||''}"></div>
+          </div>
+          <div class="field"><label>Sanctioned (₹)</label><input class="input" type="number" id="up-sanctioned" value="${lead.loan_amount_sanctioned||''}"></div>
+          <button class="btn btn-primary btn-block" id="save-lead">Save Changes</button>
+        </div>
+        <div class="so-section">
+          <div class="so-section-title">Post Update</div>
+          <div class="field"><label>Visibility</label><select class="select" id="new-vis">${VISIBILITY.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></div>
+          <div class="field"><label>Message</label><textarea class="textarea" id="new-update" rows="3"></textarea></div>
+          <button class="btn btn-navy btn-block" id="post-update">Post Update</button>
+        </div>
+        <div class="so-section"><div class="so-section-title">Updates Timeline</div><div class="timeline" id="timeline"></div></div>`;
+      el('save-lead').onclick = async () => {
+        try {
+          await apiPatch('/api/crm/leads/'+id, { lead_status: el('up-status').value, next_follow_up: el('up-followup').value||null, loan_amount_sanctioned: el('up-sanctioned').value||null });
+          showToast('Lead updated.', 'success'); loadLeads();
+        } catch {}
+      };
+      el('post-update').onclick = async () => {
+        const text = el('new-update').value.trim();
+        if (!text) { showToast('Enter a message.', 'warning'); return; }
+        try {
+          await apiPost(`/api/crm/leads/${id}/updates`, { update_text: text, visibility: el('new-vis').value });
+          showToast('Update posted.', 'success'); el('new-update').value=''; loadTimeline(id);
+        } catch {}
+      };
+      loadTimeline(id);
+    } catch { el('so-body').innerHTML = emptyState(1, 'Failed to load.'); }
+  };
+
+  async function loadTimeline(id) {
+    try {
+      const { updates } = await apiGet(`/api/crm/leads/${id}/updates`);
+      const tl = el('timeline'); if (!tl) return;
+      tl.innerHTML = updates.length ? updates.map(u => `
+        <div class="tl-item ${u.visibility}"><div class="tl-head"><span class="tl-poster">${escapeHtml(u.poster?.full_name||'You')}</span><span class="tl-vis tlv-${u.visibility}">${u.visibility.replace(/_/g,' ')}</span><span class="tl-meta">${timeAgo(u.created_at)}</span></div><div class="tl-text">${escapeHtml(u.update_text)}</div></div>`).join('') : '<p class="text-sm muted text-center" style="padding:14px">No updates yet.</p>';
+    } catch {}
+  }
+
+  function closeSlide(){ el('so-backdrop').classList.remove('open'); el('slideover').classList.remove('open'); }
+  el('so-close').onclick = closeSlide; el('so-backdrop').onclick = closeSlide;
+
+  el('status-pills').addEventListener('click', e => {
+    const p = e.target.closest('.pill'); if (!p) return;
+    document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active'); statusFilter = p.dataset.status; loadLeads();
+  });
+
+  await Promise.all([loadLeads(), loadIncentives()]);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard — Nidhi Path</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body class="student-page">
+  <div class="student-wrap">
+    <div class="student-topbar">
+      <div class="brand">NIDHI PATH <span>SmartCRM</span></div>
+      <button class="student-logout" data-logout>Sign Out</button>
+    </div>
+
+    <!-- Hero / info card -->
+    <div class="student-hero">
+      <div class="student-hero-top">
+        <div class="student-hero-avatar" id="s-avatar">S</div>
+        <h2 id="s-name">Loading…</h2>
+        <span class="student-hero-status" id="s-status">—</span>
+      </div>
+      <div class="student-fields" id="s-fields">
+        <div class="student-field"><span class="sf-label">Loading</span><span class="sf-value">Please wait…</span></div>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="card">
+      <div class="card-head"><h2>Notifications &amp; Updates</h2></div>
+      <div class="timeline" id="s-updates">
+        <p class="text-sm muted text-center" style="padding:18px">No updates yet. We'll notify you as your application progresses.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/utils.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/api.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const user = window.Auth.requireAuth(['student']);
+    if (!user) return;
+    window.Auth.initShell(user);
+
+    try {
+      // student's own lead (API auto-scopes to self)
+      const { leads } = await apiGet('/api/crm/leads');
+      const lead = leads?.[0] || {};
+
+      const name = user.full_name || 'Student';
+      el('s-avatar').textContent = initials(name);
+      el('s-name').textContent = name;
+      el('s-status').textContent = lead.lead_status || 'Application Received';
+
+      // Exactly 8 read-only fields
+      const fields = [
+        ['Name', user.full_name],
+        ['Email', user.email],
+        ['Mobile', user.mobile],
+        ['University Applied For', lead.university_applied],
+        ['Country', lead.country],
+        ['Source / Client', lead.source_client?.full_name],
+        ['Loan Amount Needed', formatCurrency(lead.loan_amount_needed, true)],
+        ['Loan Amount Sanctioned', formatCurrency(lead.loan_amount_sanctioned, true)],
+      ];
+      setHtml('s-fields', fields.map(([l, v]) =>
+        `<div class="student-field"><span class="sf-label">${escapeHtml(l)}</span><span class="sf-value">${escapeHtml(v || '—')}</span></div>`
+      ).join(''));
+
+      // Student-visible updates only (API filters by role)
+      if (lead.id) {
+        const { updates } = await apiGet(`/api/crm/leads/${lead.id}/updates`).catch(() => ({ updates: [] }));
+        if (updates && updates.length) {
+          setHtml('s-updates', updates.map(u => `
+            <div class="tl-item student_visible">
+              <div class="tl-head"><span class="tl-poster">Nidhi Path Team</span><span class="tl-meta">${formatDateTime(u.created_at)}</span></div>
+              <div class="tl-text">${escapeHtml(u.update_text)}</div>
+            </div>`).join(''));
+        }
+      }
+    } catch (e) {
+      el('s-name').textContent = user.full_name || 'Student';
+    }
+  });
+  </script>
+</body>
+</html>

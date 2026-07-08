@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=017">
+</head>
+<body class="admin-page smartcrm-admin-page smartcrm-command-page" data-admin-page="dashboard">
+  <div class="smartcrm-shell">
+    <aside class="smartcrm-sidebar" aria-label="SmartCRM navigation">
+      <a class="smartcrm-brand" href="admin-dashboard.html" data-no-translate>
+        <img src="logo.jpg" alt="Nidhi Path logo">
+        <span>
+          <strong>NIDHI PATH</strong>
+          <small>SMARTCRM INTELLIGENCE</small>
+        </span>
+      </a>
+
+      <nav class="smartcrm-side-nav">
+        <a class="is-active" href="admin-dashboard.html"><span>01</span>Dashboard</a>
+        <a href="admin-users.html"><span>02</span>Users</a>
+        <a href="admin-crm.html"><span>03</span>CRM</a>
+        <a href="admin-reports.html#employee-performance-overview"><span>04</span>Employee Performance</a>
+        <a href="admin-reports.html"><span>05</span>Reports</a>
+        <a href="admin-commissions.html"><span>06</span>Commissions</a>
+        <a href="admin-reports.html#business-analytics"><span>07</span>Business Analytics</a>
+        <a href="admin-reports.html#smart-alerts-panel"><span>08</span>Alerts <em id="admin-alert-count">0</em></a>
+        <a href="admin-site-settings.html"><span>09</span>Settings</a>
+        <a href="login.html#employee" data-admin-logout><span>10</span>Logout</a>
+      </nav>
+
+      <div class="smartcrm-profile-card">
+        <div class="smartcrm-profile-mark">NP</div>
+        <div>
+          <strong>Nidhi Path Finance</strong>
+          <span>Super Admin</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="smartcrm-workspace">
+      <header class="smartcrm-pagebar">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Today Overview, Performance, Pipeline &amp; Revenue Intelligence</p>
+        </div>
+        <div class="smartcrm-toolbar">
+          <a class="smartcrm-tool-button" href="admin-reports.html">Full Reports</a>
+          <a class="smartcrm-tool-button" href="admin-users-create.html">Create User</a>
+          <button type="button" class="smartcrm-tool-button danger" data-admin-logout>Logout</button>
+        </div>
+      </header>
+
+      <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+
+      <section class="smartcrm-kpi-strip" aria-label="Admin dashboard KPIs">
+        <article class="smartcrm-kpi-card tone-indigo">
+          <span class="smartcrm-kpi-icon">L</span>
+          <div><small>Total Leads</small><strong id="admin-total-leads">0</strong><em>Live CRM</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-blue">
+          <span class="smartcrm-kpi-icon">F</span>
+          <div><small>Ongoing Files</small><strong id="admin-ongoing-files">0</strong><em>Operational queue</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-green">
+          <span class="smartcrm-kpi-icon">S</span>
+          <div><small>Sanctioned</small><strong id="admin-sanctioned">0</strong><em>Positive pipeline</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-mint">
+          <span class="smartcrm-kpi-icon">D</span>
+          <div><small>Disbursed</small><strong id="admin-disbursed">0</strong><em>Completed value</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-gold">
+          <span class="smartcrm-kpi-icon">W</span>
+          <div><small>Weekly Income</small><strong id="admin-weekly-income">Rs. 0</strong><em>This week</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-sky">
+          <span class="smartcrm-kpi-icon">M</span>
+          <div><small>Monthly Net Income</small><strong id="admin-monthly-net-income">Rs. 0</strong><em>This month</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-red">
+          <span class="smartcrm-kpi-icon">C</span>
+          <div><small>Commission Due</small><strong id="admin-commission-due">Rs. 0</strong><em class="is-warning">Payable</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-green">
+          <span class="smartcrm-kpi-icon">P</span>
+          <div><small>Commission Paid</small><strong id="admin-commission-paid">Rs. 0</strong><em>Cleared</em></div>
+        </article>
+      </section>
+
+      <section class="smartcrm-command-grid">
+        <article class="smartcrm-card smartcrm-wide-card" id="employee-performance-overview">
+          <div class="smartcrm-card-head"><h2>Employee Performance Overview</h2><a href="admin-reports.html">Open details</a></div>
+          <div class="smartcrm-chart-layout">
+            <div class="smartcrm-performance-chart" id="admin-performance-bars"></div>
+            <div class="smartcrm-leader-panel">
+              <div class="smartcrm-mini-head"><strong>Leaderboard</strong><span>Score /100</span></div>
+              <div class="smartcrm-leaderboard" id="admin-employee-performance"></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="smartcrm-card smartcrm-compliance-card">
+          <div class="smartcrm-card-head"><h2>Daily Update Compliance</h2></div>
+          <div class="smartcrm-compliance-wrap">
+            <div class="smartcrm-donut" id="admin-compliance-donut" style="--value:0"><strong id="admin-compliance-percent">0%</strong><span>Compliant</span></div>
+            <div class="smartcrm-compliance-meta">
+              <p><i class="dot-green"></i>Submitted <strong id="admin-daily-submitted">0</strong></p>
+              <p><i class="dot-red"></i>Pending <strong id="admin-daily-pending">0</strong></p>
+            </div>
+            <div class="smartcrm-soft-alert"><strong id="admin-compliance-alert">0 employees pending daily update</strong></div>
+          </div>
+        </article>
+
+        <article class="smartcrm-card smartcrm-trend-card">
+          <div class="smartcrm-card-head"><h2>Weekly Business Trend</h2></div>
+          <div class="smartcrm-line-chart" id="admin-weekly-trend"></div>
+        </article>
+
+        <article class="smartcrm-card">
+          <div class="smartcrm-card-head"><h2>Lead Funnel</h2></div>
+          <div class="smartcrm-funnel-layout">
+            <div class="smartcrm-funnel" id="admin-lead-funnel"></div>
+          </div>
+        </article>
+
+        <article class="smartcrm-card" id="smart-alerts-panel">
+          <div class="smartcrm-card-head"><h2>Smart Alerts</h2><a href="admin-reports.html">View All</a></div>
+          <ul class="smartcrm-alert-list smartcrm-alert-stack" id="admin-smart-alerts"></ul>
+        </article>
+
+        <article class="smartcrm-card smartcrm-wide-card" id="operations-snapshot">
+          <div class="smartcrm-card-head"><h2>Website Operations Snapshot</h2></div>
+          <div class="smartcrm-revenue-grid">
+            <article><span>Total Enquiries</span><strong id="dashboard-total-enquiries">0</strong><em>Website leads</em></article>
+            <article><span>New Enquiries</span><strong id="dashboard-new-enquiries">0</strong><em>Need action</em></article>
+            <article><span>Open Chats</span><strong id="dashboard-open-chats">0</strong><em>Live support</em></article>
+            <article><span>Closed Chats</span><strong id="dashboard-closed-chats">0</strong><em>Resolved</em></article>
+          </div>
+        </article>
+
+        <article class="smartcrm-card">
+          <div class="smartcrm-card-head"><h2>CRM Summary</h2><a href="admin-crm.html">Open CRM</a></div>
+          <div class="smartcrm-source-grid">
+            <article><strong id="dashboard-total-users">0</strong><span>Total users</span></article>
+            <article><strong id="dashboard-total-applications">0</strong><span>Applications</span></article>
+            <article><strong id="dashboard-work-started">0</strong><span>Work started</span></article>
+            <article><strong id="dashboard-completed-applications">0</strong><span>Completed</span></article>
+          </div>
+        </article>
+
+        <article class="smartcrm-card">
+          <div class="smartcrm-card-head"><h2>Website Control</h2><a href="admin-website-control.html">Open controls</a></div>
+          <div class="smartcrm-source-grid">
+            <article><strong id="site-active-services">0</strong><span>Active services</span></article>
+            <article><strong id="site-visible-sections">0</strong><span>Visible sections</span></article>
+            <article><strong id="site-navigation-items">0</strong><span>Navigation items</span></article>
+            <article><strong id="site-media-files">0</strong><span>Media files</span></article>
+          </div>
+        </article>
+
+        <article class="smartcrm-card smartcrm-wide-card">
+          <div class="smartcrm-card-head"><h2>Recent Enquiries</h2><a href="admin-enquiries.html">View all</a></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Reference ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Service</th><th>Source form</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
+              <tbody id="recent-enquiries-body"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="smartcrm-card">
+          <div class="smartcrm-card-head"><h2>Recent Chat Sessions</h2><a href="admin-chats.html">View all</a></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Chat ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Service</th><th>Status</th><th>Last message</th><th>Created</th><th>Action</th></tr></thead>
+              <tbody id="recent-chats-body"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <footer class="smartcrm-command-footer">All times are in IST</footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+  <script src="smartcrm.js?v=021"></script>
+</body>
+</html>

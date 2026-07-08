@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Library | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page" data-admin-page="mediaLibrary">
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo"><span class="brand-text">Nidhi Path</span></a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+  <main class="admin-main">
+    <section class="admin-heading">
+      <p class="eyebrow">Website Control</p>
+      <h1>Media Library</h1>
+      <p>Track media URLs now. File upload storage can be connected later using Supabase Storage.</p>
+    </section>
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+    <section class="admin-grid-two">
+      <form class="admin-panel admin-editor-stack" id="admin-media-form">
+        <h2>Add or edit media record</h2>
+        <input type="hidden" id="media-id">
+        <label>File name<input name="fileName" type="text" required></label>
+        <label>File URL<input name="fileUrl" type="url" required></label>
+        <label>File type<input name="fileType" type="text" placeholder="image/jpeg"></label>
+        <label>Alt text<input name="altText" type="text"></label>
+        <label>Usage context<input name="usageContext" type="text"></label>
+        <div class="admin-actions">
+          <button type="submit" class="btn">Save Media</button>
+          <button type="button" class="btn secondary-btn" id="media-form-reset">Clear</button>
+        </div>
+      </form>
+      <div class="admin-panel">
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>Name</th><th>URL</th><th>Type</th><th>Alt text</th><th>Usage</th><th>Created</th><th>Action</th></tr></thead>
+            <tbody id="admin-media-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+</body>
+</html>

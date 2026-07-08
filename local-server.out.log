@@ -1,0 +1,13 @@
+Environment loaded:
+- NODE_ENV: development
+- MOCK_DATABASE_MODE: false
+- SUPABASE_URL loaded: yes
+- SUPABASE_SERVICE_ROLE_KEY loaded: yes
+Static frontend path: F:\nidhi_final\nidhi_final\frontend
+Serving index.html from: F:\nidhi_final\nidhi_final\frontend\index.html
+Serving script.js from: F:\nidhi_final\nidhi_final\frontend\script.js
+Serving style.css from: F:\nidhi_final\nidhi_final\frontend\style.css
+Nidhi Path backend listening on http://localhost:3000 (Supabase database mode)
+[0mGET /api/health [32m200[0m 2.558 ms - 87[0m
+[0mGET /api/health [32m200[0m 0.689 ms - 87[0m
+[0mGET /api/health [32m200[0m 0.242 ms - 87[0m

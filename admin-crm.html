@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Leads | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=016">
+  <link rel="stylesheet" href="crm-premium.css?v=022">
+</head>
+<body class="admin-page" data-admin-page="crm">
+
+  <!-- Admin topbar for installSmartAdminShell() to wrap -->
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name">
+      <img class="site-logo" src="logo.jpg" alt="Nidhi Path">
+      <span class="brand-text">Nidhi Path</span>
+    </a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+
+  <main class="admin-main">
+
+    <!-- Page heading injected into smart shell -->
+    <section class="admin-heading">
+      <p class="eyebrow">SmartCRM</p>
+      <h1>Lead Pipeline</h1>
+      <p>Track every lead through the complete loan lifecycle — from new enquiry to final disbursement.</p>
+    </section>
+
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+
+    <!-- CRM Stats Strip -->
+    <section class="crm-stats-strip">
+      <button class="crm-stat-card" data-crm-stat-filter="users" type="button">
+        <strong id="crm-total-users">—</strong>
+        <span>Total Users</span>
+      </button>
+      <button class="crm-stat-card" data-crm-stat-filter="pending" type="button">
+        <strong id="crm-pending-users">—</strong>
+        <span>Pending</span>
+      </button>
+      <button class="crm-stat-card" data-crm-stat-filter="applications" type="button">
+        <strong id="crm-total-applications">—</strong>
+        <span>Applications</span>
+      </button>
+      <button class="crm-stat-card crm-stat-green" data-crm-stat-filter="work_started" type="button">
+        <strong id="crm-work-started">—</strong>
+        <span>Work Started</span>
+      </button>
+    </section>
+
+    <!-- Pipeline Status Tabs -->
+    <nav class="crm-pipeline-tabs" aria-label="Filter by pipeline stage" id="crm-pipeline-nav">
+      <button class="crm-tab is-active" data-status="" type="button">All Leads</button>
+      <button class="crm-tab crm-tab-new" data-status="new_user" type="button">New</button>
+      <button class="crm-tab crm-tab-registered" data-status="registered" type="button">Registered</button>
+      <button class="crm-tab crm-tab-inprogress" data-status="in_progress" type="button">In Progress</button>
+      <button class="crm-tab crm-tab-docs" data-status="documents_pending" type="button">Docs Pending</button>
+      <button class="crm-tab crm-tab-bank" data-status="bank_review" type="button">Bank Review</button>
+      <button class="crm-tab crm-tab-sanction" data-status="sanction_in_progress" type="button">Sanction In Progress</button>
+      <button class="crm-tab crm-tab-sanctioned" data-status="sanctioned" type="button">Sanctioned</button>
+      <button class="crm-tab crm-tab-disbursed" data-status="disbursed" type="button">Disbursed</button>
+      <button class="crm-tab crm-tab-rejected" data-status="rejected" type="button">Rejected</button>
+      <button class="crm-tab crm-tab-closed" data-status="closed" type="button">Closed</button>
+    </nav>
+
+    <!-- Filter Bar -->
+    <section class="crm-filter-section">
+      <form class="crm-filter-bar" id="admin-crm-filters">
+        <div class="crm-search-wrap">
+          <svg class="crm-search-icon" width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="search" id="crm-search" class="crm-search-input" placeholder="Search name, email, App ID, mobile…">
+        </div>
+        <select id="crm-status-filter" class="crm-filter-select" style="display:none">
+          <option value="">All Statuses</option>
+        </select>
+        <select id="crm-service-filter" class="crm-filter-select">
+          <option value="">All Services</option>
+        </select>
+        <button type="submit" class="crm-filter-btn">Search</button>
+        <button type="button" class="crm-filter-btn secondary" id="crm-filter-reset">Reset</button>
+      </form>
+      <div class="crm-filter-actions">
+        <a href="admin-users.html?mode=create&type=student" class="crm-new-lead-btn">+ New Lead</a>
+      </div>
+    </section>
+
+    <!-- Lead Table -->
+    <section class="crm-table-section">
+      <div class="crm-table-meta">
+        <span id="admin-crm-pagination" class="crm-pagination-info">Loading leads…</span>
+      </div>
+      <div class="crm-table-wrap">
+        <table class="crm-lead-table">
+          <thead>
+            <tr>
+              <th>Lead</th>
+              <th>Mobile</th>
+              <th>University / Country</th>
+              <th>Source</th>
+              <th>Loan Needed</th>
+              <th>Assigned To</th>
+              <th>Status</th>
+              <th>Last Activity</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="admin-crm-body">
+            <tr class="crm-empty-row">
+              <td colspan="9">
+                <div class="crm-empty-state">
+                  <div class="crm-empty-icon">📋</div>
+                  <strong>Loading CRM leads…</strong>
+                  <p>Fetching your pipeline data.</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Lead Detail Drawer (inline panel, opened by clicking a row) -->
+    <section class="crm-detail-drawer" id="crm-inline-detail-panel" hidden>
+      <div class="crm-drawer-header">
+        <div class="crm-drawer-title">
+          <h2>Lead Detail</h2>
+          <span id="crm-drawer-app-id" class="crm-app-id-badge">—</span>
+        </div>
+        <button type="button" class="crm-drawer-close" id="crm-drawer-close-btn" aria-label="Close detail panel">✕</button>
+      </div>
+
+      <!-- Lead overview grid -->
+      <div class="crm-drawer-overview admin-detail-grid" id="admin-crm-detail"></div>
+
+      <!-- Controls + Updates side-by-side -->
+      <div class="crm-drawer-body">
+
+        <!-- Left: Application Controls -->
+        <div class="crm-drawer-col">
+          <form class="crm-control-card" id="crm-application-form">
+            <div class="crm-control-card-head">
+              <h3>Application Controls</h3>
+              <strong id="crm-generated-application-id" class="crm-app-id-inline">Not generated</strong>
+            </div>
+
+            <!-- Status & Stage -->
+            <div class="crm-form-group-row">
+              <label>Pipeline Status
+                <select id="crm-workflow-stage" name="workflowStage" class="crm-select-prominent"></select>
+              </label>
+              <label>Application Status
+                <select id="crm-application-status" name="applicationStatus" class="crm-select-prominent"></select>
+              </label>
+            </div>
+
+            <!-- Assignment -->
+            <div class="crm-form-group-row">
+              <label>Assigned To
+                <select id="crm-assigned-employee" name="assignedEmployeeId"></select>
+              </label>
+              <label>Follow-up Date
+                <input type="date" name="nextFollowupDate">
+              </label>
+            </div>
+
+            <!-- Client -->
+            <label>Client / Reference Partner
+              <select id="crm-client-name" name="clientId"></select>
+              <input type="hidden" id="crm-client-type-value" name="clientType" value="regular">
+            </label>
+
+            <!-- Loan Details -->
+            <div class="crm-section-divider">Study Details</div>
+            <div class="crm-form-group-row">
+              <label>University Applied For
+                <input type="text" name="universityAppliedFor" placeholder="University name">
+              </label>
+              <label>Country
+                <input type="text" name="country" placeholder="Country">
+              </label>
+            </div>
+            <div class="crm-form-group-row">
+              <label>Course / Program
+                <input type="text" name="course" placeholder="Course or program">
+              </label>
+            </div>
+
+            <div class="crm-section-divider">Loan &amp; Bank</div>
+            <div class="crm-form-group-row">
+              <label>Bank / NBFC
+                <input type="text" name="bankName" placeholder="Bank name">
+              </label>
+              <label>Service Type
+                <select id="crm-application-service" name="service"></select>
+              </label>
+            </div>
+            <div class="crm-form-group-row">
+              <label>Loan Amount Required (₹)
+                <input type="number" name="loanAmountRequired" min="0" step="1000" placeholder="0">
+              </label>
+              <label>Sanctioned Amount (₹)
+                <input type="number" name="loanAmountApproved" min="0" step="1000" placeholder="0">
+              </label>
+            </div>
+            <div class="crm-form-group-row">
+              <label>Sanction Status
+                <select id="crm-sanction-status" name="sanctionStatus"></select>
+              </label>
+              <label>Disbursement Status
+                <select id="crm-disbursement-status" name="disbursementStatus"></select>
+              </label>
+            </div>
+
+            <!-- Other -->
+            <div class="crm-form-group-row">
+              <label>Priority
+                <select id="crm-priority" name="priority"></select>
+              </label>
+              <label>Document Status
+                <select id="crm-document-status" name="documentStatus"></select>
+              </label>
+            </div>
+            <div class="crm-form-group-row">
+              <label>Commission Status
+                <select id="crm-commission-status" name="commissionStatus"></select>
+              </label>
+              <label>Admin Status
+                <input type="text" name="adminStatus" placeholder="registered">
+              </label>
+            </div>
+
+            <label>Internal Notes
+              <textarea name="notes" rows="2" placeholder="Admin-only notes…"></textarea>
+            </label>
+
+            <div class="crm-control-actions">
+              <button type="submit" class="crm-btn-primary">Save Changes</button>
+              <button type="button" class="crm-btn-secondary" id="crm-work-started-button">Mark Work Started</button>
+              <a href="admin-crm-detail.html" class="crm-btn-link" id="crm-full-detail-link">Full Detail →</a>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Updates -->
+        <div class="crm-drawer-col">
+          <form class="crm-update-card" id="crm-update-form">
+            <div class="crm-control-card-head">
+              <h3>Add Update</h3>
+            </div>
+            <label>Update Type
+              <select id="crm-update-type" name="updateType"></select>
+            </label>
+            <label>Title
+              <input type="text" name="title" placeholder="e.g. Documents received, Status changed">
+            </label>
+            <label>Message
+              <textarea name="message" rows="4" required placeholder="Write the update message here…"></textarea>
+            </label>
+            <div class="crm-visibility-grid">
+              <label class="crm-vis-check"><input type="checkbox" name="studentVisible" checked><span>Student</span></label>
+              <label class="crm-vis-check"><input type="checkbox" name="clientVisible" checked><span>Client</span></label>
+              <label class="crm-vis-check"><input type="checkbox" name="boardVisible"><span>Board</span></label>
+              <label class="crm-vis-check"><input type="checkbox" name="internalOnly"><span>Internal Only</span></label>
+            </div>
+            <input type="hidden" name="visibleToUser" value="true">
+            <button type="submit" class="crm-btn-primary" style="width:100%;margin-top:0.5rem">Post Update</button>
+          </form>
+
+          <div class="crm-timeline-card">
+            <div class="crm-control-card-head"><h3>Updates Timeline</h3></div>
+            <div class="crm-timeline" id="crm-updates-timeline">
+              <p class="crm-empty-msg">No updates yet for this lead.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /drawer-body -->
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+  <script src="admin.js?v=028"></script>
+</body>
+</html>

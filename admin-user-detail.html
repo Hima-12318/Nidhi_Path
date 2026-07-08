@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Detail | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page" data-admin-page="userDetail">
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo"><span class="brand-text">Nidhi Path</span></a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+  <main class="admin-main">
+    <section class="admin-heading">
+      <p class="eyebrow">User Management</p>
+      <h1>User Detail</h1>
+      <p>Approve, suspend or review the CRM application linked to this customer account.</p>
+    </section>
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+    <section class="admin-chat-layout">
+      <div class="admin-panel">
+        <div class="admin-panel-head">
+          <h2>User profile</h2>
+          <a href="admin-users.html">Back to users</a>
+        </div>
+        <div class="admin-detail-grid" id="admin-user-detail"></div>
+      </div>
+      <form class="admin-panel admin-status-form admin-editor-grid" id="admin-user-status-form">
+        <h2 class="span-2">Update account access</h2>
+        <label>Account Status <select id="user-account-status" name="status"></select></label>
+        <label>Application Status <select id="user-application-status" name="applicationStatus"></select></label>
+        <label class="span-2">Assigned Employee <select id="user-assigned-employee" name="assignedEmployeeId"></select></label>
+        <div class="admin-actions span-2">
+          <a class="btn secondary-btn" id="user-application-link" href="admin-crm.html">View CRM</a>
+          <button type="submit" class="btn">Save Changes</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Reports | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page smartcrm-admin-page smartcrm-command-page" data-admin-page="reports">
+  <div class="smartcrm-shell">
+    <aside class="smartcrm-sidebar" aria-label="SmartCRM navigation">
+      <a class="smartcrm-brand" href="admin-dashboard.html" data-no-translate>
+        <img src="logo.jpg" alt="Nidhi Path logo">
+        <span>
+          <strong>NIDHI PATH</strong>
+          <small>SMARTCRM INTELLIGENCE</small>
+        </span>
+      </a>
+
+      <nav class="smartcrm-side-nav">
+        <a href="admin-dashboard.html"><span>01</span>Dashboard</a>
+        <a href="admin-users.html"><span>02</span>Users</a>
+        <a href="admin-crm.html"><span>03</span>CRM</a>
+        <a href="admin-reports.html#employee-performance-overview"><span>04</span>Employee Performance</a>
+        <a class="is-active" href="admin-reports.html"><span>05</span>Reports</a>
+        <a href="admin-commissions.html"><span>06</span>Commissions</a>
+        <a href="admin-reports.html#business-analytics"><span>07</span>Business Analytics</a>
+        <a href="admin-reports.html#smart-alerts-panel"><span>08</span>Alerts <em id="admin-alert-count">0</em></a>
+        <a href="admin-site-settings.html"><span>09</span>Settings</a>
+        <a href="login.html#employee" data-admin-logout><span>10</span>Logout</a>
+      </nav>
+
+      <div class="smartcrm-profile-card">
+        <div class="smartcrm-profile-mark">NP</div>
+        <div>
+          <strong>Nidhi Path Finance</strong>
+          <span>Super Admin</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="smartcrm-workspace">
+      <header class="smartcrm-pagebar">
+        <div>
+          <h1>Admin Reports</h1>
+          <p>Performance, Pipeline &amp; Revenue Intelligence</p>
+        </div>
+        <div class="smartcrm-toolbar">
+          <button type="button" class="smartcrm-tool-button" id="admin-date-range">12 May 2025 - 18 May 2025</button>
+          <button type="button" class="smartcrm-tool-button" data-smartcrm-export="pdf">Export PDF</button>
+          <button type="button" class="smartcrm-tool-button" data-smartcrm-export="pdf-download">Download PDF</button>
+          <button type="button" class="smartcrm-tool-button" data-smartcrm-export="csv">Export CSV</button>
+          <button type="button" class="smartcrm-tool-button danger" data-admin-logout>Logout</button>
+        </div>
+      </header>
+
+      <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+
+      <section class="smartcrm-kpi-strip" aria-label="Admin report KPIs">
+        <article class="smartcrm-kpi-card tone-indigo">
+          <span class="smartcrm-kpi-icon">L</span>
+          <div><small>Total Leads</small><strong id="admin-total-leads">0</strong><em>Up 18.5% vs last week</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-blue">
+          <span class="smartcrm-kpi-icon">F</span>
+          <div><small>Ongoing Files</small><strong id="admin-ongoing-files">0</strong><em>Up 12.3% vs last week</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-green">
+          <span class="smartcrm-kpi-icon">S</span>
+          <div><small>Sanctioned</small><strong id="admin-sanctioned">0</strong><em>Up 15.6% vs last week</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-mint">
+          <span class="smartcrm-kpi-icon">D</span>
+          <div><small>Disbursed</small><strong id="admin-disbursed">0</strong><em>Up 14.2% vs last week</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-gold">
+          <span class="smartcrm-kpi-icon">W</span>
+          <div><small>Weekly Income</small><strong id="admin-weekly-income">Rs. 0</strong><em>Up 16.8% vs last week</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-sky">
+          <span class="smartcrm-kpi-icon">M</span>
+          <div><small>Monthly Net Income</small><strong id="admin-monthly-net-income">Rs. 0</strong><em>Up 22.4% vs last month</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-red">
+          <span class="smartcrm-kpi-icon">C</span>
+          <div><small>Commission Due</small><strong id="admin-commission-due">Rs. 0</strong><em class="is-warning">Due this week</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-green">
+          <span class="smartcrm-kpi-icon">P</span>
+          <div><small>Commission Paid</small><strong id="admin-commission-paid">Rs. 0</strong><em>Up 19.5% vs last week</em></div>
+        </article>
+      </section>
+
+      <section class="smartcrm-command-grid">
+        <article class="smartcrm-card smartcrm-wide-card" id="employee-performance-overview">
+          <div class="smartcrm-card-head">
+            <h2>Employee Performance Overview</h2>
+            <select id="admin-performance-range" aria-label="Performance range">
+              <option>This Week</option>
+              <option>This Month</option>
+            </select>
+          </div>
+          <div class="smartcrm-chart-layout">
+            <div class="smartcrm-performance-chart" id="admin-performance-bars"></div>
+            <div class="smartcrm-leader-panel">
+              <div class="smartcrm-mini-head"><strong>Performance Leaderboard</strong><span>Score /100</span></div>
+              <div class="smartcrm-leaderboard" id="admin-employee-performance"></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="smartcrm-card smartcrm-compliance-card">
+          <div class="smartcrm-card-head"><h2>Daily Update Compliance</h2></div>
+          <div class="smartcrm-compliance-wrap">
+            <div class="smartcrm-donut" id="admin-compliance-donut" style="--value:0"><strong id="admin-compliance-percent">0%</strong><span>Compliant</span></div>
+            <div class="smartcrm-compliance-meta">
+              <p><i class="dot-green"></i>Submitted <strong id="admin-daily-submitted">0</strong></p>
+              <p><i class="dot-red"></i>Pending <strong id="admin-daily-pending">0</strong></p>
+            </div>
+            <div class="smartcrm-soft-alert"><strong id="admin-compliance-alert">0 employees pending daily update</strong></div>
+          </div>
+        </article>
+
+        <article class="smartcrm-card smartcrm-wide-card smartcrm-report-modal" id="employee-performance-reports" hidden>
+          <div class="smartcrm-card-head">
+            <h2>Employee Performance Reports</h2>
+            <button type="button" class="smartcrm-tool-button" id="employee-report-close">Close</button>
+          </div>
+          <form class="smartcrm-report-controls smartcrm-report-panel" id="employee-performance-report-form" hidden>
+            <label>
+              <span>Report Type</span>
+              <select id="employee-report-type" name="reportType">
+                <option value="daily">Daily Report</option>
+                <option value="weekly">Weekly Report</option>
+                <option value="monthly">Monthly Report</option>
+              </select>
+            </label>
+            <label data-report-field="date">
+              <span>Date</span>
+              <input type="date" id="employee-report-date" name="date">
+            </label>
+            <label data-report-field="month">
+              <span>Month</span>
+              <input type="month" id="employee-report-month" name="monthYear">
+            </label>
+            <label data-report-field="week">
+              <span>Week</span>
+              <select id="employee-report-week" name="week"></select>
+            </label>
+            <label>
+              <span>Employee</span>
+              <select id="employee-report-employee" name="employeeId">
+                <option value="">All employees</option>
+              </select>
+            </label>
+            <div class="smartcrm-report-actions">
+              <button type="submit" class="smartcrm-tool-button">View Report</button>
+              <select id="employee-report-export-format" aria-label="Employee report export format">
+                <option value="csv">CSV</option>
+                <option value="pdf">PDF</option>
+                <option value="pdf-download">Download PDF</option>
+              </select>
+              <button type="button" class="smartcrm-tool-button" id="employee-report-export-button">Export</button>
+            </div>
+          </form>
+          <div class="smartcrm-report-empty" id="employee-report-empty">
+            Use the top Export PDF, Download PDF, or Export CSV button to choose report filters.
+          </div>
+          <div class="smartcrm-report-summary" id="employee-report-summary" hidden></div>
+          <div class="smartcrm-report-result-tools" id="employee-report-result-tools" hidden>
+            <label>
+              <span>Search</span>
+              <input type="search" id="employee-report-search" placeholder="Employee name">
+            </label>
+            <label>
+              <span>Rows</span>
+              <select id="employee-report-page-size">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+            </label>
+          </div>
+          <div class="smartcrm-report-table-wrap" id="employee-report-table-wrap" hidden>
+            <table class="smartcrm-report-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Work Date</th>
+                  <th>Total Leads</th>
+                  <th>New Leads</th>
+                  <th>Follow-ups</th>
+                  <th>Sanctions</th>
+                  <th>Disbursements</th>
+                  <th>Documents</th>
+                  <th>Bank Logins</th>
+                  <th>Approved</th>
+                  <th>Rejected</th>
+                  <th>Notes</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody id="employee-report-body">
+                <tr><td colspan="13">Select filters and click View Report.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="smartcrm-report-pagination" id="employee-report-pagination" hidden>
+            <button type="button" class="smartcrm-tool-button" id="employee-report-prev">Previous</button>
+            <span id="employee-report-page-info">Page 1 of 1</span>
+            <button type="button" class="smartcrm-tool-button" id="employee-report-next">Next</button>
+          </div>
+        </article>
+
+        <article class="smartcrm-card">
+          <div class="smartcrm-card-head">
+            <h2>Weekly Business Trend</h2>
+            <select aria-label="Business trend range"><option>This Week</option><option>This Month</option></select>
+          </div>
+          <div class="smartcrm-line-chart" id="admin-weekly-trend"></div>
+        </article>
+
+        <article class="smartcrm-card">
+          <div class="smartcrm-card-head"><h2>Lead Funnel <span>(This Week)</span></h2></div>
+          <div class="smartcrm-funnel-layout">
+            <div class="smartcrm-funnel" id="admin-lead-funnel"></div>
+          </div>
+        </article>
+
+        <article class="smartcrm-card">
+          <div class="smartcrm-card-head"><h2>Source-wise Business <span>(This Week)</span></h2></div>
+          <div class="smartcrm-source-layout">
+            <div class="smartcrm-source-donut" id="admin-source-donut"></div>
+            <div class="smartcrm-source-grid" id="admin-source-performance"></div>
+          </div>
+          <p class="smartcrm-success-note" id="admin-source-note">Disbursed from these sources: 0</p>
+        </article>
+
+        <article class="smartcrm-card">
+          <div class="smartcrm-card-head"><h2>Commission Analytics <span>(This Week)</span></h2></div>
+          <div class="smartcrm-commission-table-wrap">
+            <table class="smartcrm-commission-table">
+              <thead><tr><th>Partner Name</th><th>Comm. %</th><th>Commission</th><th>Status</th></tr></thead>
+              <tbody id="admin-commission-table"></tbody>
+            </table>
+          </div>
+          <div class="smartcrm-commission-totals">
+            <span>Total Paid <strong id="admin-commission-total-paid">Rs. 0</strong></span>
+            <span>Total Due <strong id="admin-commission-total-due">Rs. 0</strong></span>
+            <span>Total Commission <strong id="admin-commission-total-value">Rs. 0</strong></span>
+          </div>
+        </article>
+
+        <article class="smartcrm-card" id="smart-alerts-panel">
+          <div class="smartcrm-card-head"><h2>Smart Alerts</h2><a href="admin-reports.html">View All</a></div>
+          <ul class="smartcrm-alert-list smartcrm-alert-stack" id="admin-smart-alerts"></ul>
+        </article>
+
+        <article class="smartcrm-card smartcrm-wide-card" id="business-analytics">
+          <div class="smartcrm-card-head"><h2>Revenue &amp; Profit Snapshot <span>(This Month)</span></h2></div>
+          <div class="smartcrm-revenue-grid">
+            <article><span>Gross Income</span><strong id="admin-gross-income">Rs. 0</strong><em>Up 18.6% vs last month</em></article>
+            <article><span>Partner Commission</span><strong id="admin-partner-commission">Rs. 0</strong><em>Up 16.2% vs last month</em></article>
+            <article><span>Employee Incentives</span><strong id="admin-employee-incentives">Rs. 0</strong><em>Up 11.3% vs last month</em></article>
+            <article class="is-net"><span>Net Income</span><strong id="admin-net-income">Rs. 0</strong><em>Up 22.4% vs last month</em></article>
+          </div>
+        </article>
+
+        <article class="smartcrm-card smartcrm-wide-card">
+          <div class="smartcrm-card-head"><h2>Recent Activity / CRM Updates</h2></div>
+          <div class="smartcrm-activity-list" id="admin-recent-activity"></div>
+        </article>
+      </section>
+
+      <footer class="smartcrm-command-footer">All times are in IST</footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+  <script src="smartcrm.js?v=021"></script>
+</body>
+</html>

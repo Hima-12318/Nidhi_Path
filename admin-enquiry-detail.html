@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enquiry Detail | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page" data-admin-page="enquiryDetail">
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo"><span class="brand-text">Nidhi Path</span></a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+  <main class="admin-main">
+    <section class="admin-heading">
+      <p class="eyebrow">Lead Detail</p>
+      <h1>Enquiry Detail</h1>
+      <p>Review customer details and update follow-up status.</p>
+    </section>
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+    <section class="admin-grid-two">
+      <div class="admin-panel">
+        <div class="admin-detail-grid" id="admin-enquiry-detail"></div>
+      </div>
+      <form class="admin-panel admin-status-form" id="admin-enquiry-status-form">
+        <h2>Update enquiry</h2>
+        <label for="admin-enquiry-status">Status</label>
+        <select id="admin-enquiry-status"></select>
+        <label for="admin-enquiry-notes">Notes</label>
+        <textarea id="admin-enquiry-notes" rows="5" placeholder="Internal notes"></textarea>
+        <div class="admin-actions">
+          <button type="submit" class="btn">Save</button>
+          <a href="admin-enquiries.html" class="btn secondary-btn">Back</a>
+        </div>
+        <p class="form-status" id="admin-enquiry-status-message" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+</body>
+</html>

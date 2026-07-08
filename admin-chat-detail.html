@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Detail | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page" data-admin-page="chatDetail">
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo"><span class="brand-text">Nidhi Path</span></a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+  <main class="admin-main">
+    <section class="admin-heading">
+      <p class="eyebrow">Conversation</p>
+      <h1>Chat Detail</h1>
+      <p>Reply as the support agent and close the session after resolution.</p>
+    </section>
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+    <section class="admin-chat-layout">
+      <aside class="admin-panel admin-detail-grid" id="admin-chat-meta"></aside>
+      <div class="admin-panel admin-chat-thread">
+        <div class="admin-chat-messages" id="admin-chat-messages"></div>
+        <form id="admin-chat-reply-form" class="admin-chat-compose">
+          <label for="admin-chat-reply">Reply</label>
+          <textarea id="admin-chat-reply" rows="4" placeholder="Type agent reply"></textarea>
+          <div class="admin-chat-actions">
+            <button type="submit" class="btn">Send Reply</button>
+            <button type="button" class="btn secondary-btn" id="admin-close-chat">Close Chat</button>
+            <a href="admin-chats.html" class="btn secondary-btn">Back</a>
+          </div>
+          <p class="form-status" id="admin-chat-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+</body>
+</html>

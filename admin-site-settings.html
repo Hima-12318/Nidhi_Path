@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Settings | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page" data-admin-page="siteSettings">
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo"><span class="brand-text">Nidhi Path</span></a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+  <main class="admin-main">
+    <section class="admin-heading">
+      <p class="eyebrow">Website Control</p>
+      <h1>Site Settings</h1>
+      <p>Save business settings in the database for future dynamic website controls.</p>
+    </section>
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+    <form class="admin-panel admin-editor-grid" id="admin-site-settings-form">
+      <label>Business name<input name="business_name" type="text"></label>
+      <label>Tagline<input name="tagline" type="text"></label>
+      <label>Official email<input name="official_email" type="email"></label>
+      <label>Website<input name="official_website" type="text"></label>
+      <label>Official phone<input name="official_phone" type="text"></label>
+      <label>WhatsApp number<input name="whatsapp_number" type="text"></label>
+      <label>Address<input name="address" type="text"></label>
+      <label>City<input name="city" type="text"></label>
+      <label>State<input name="state" type="text"></label>
+      <label>Working hours<input name="working_hours" type="text"></label>
+      <label>SEO title<input name="seo_title" type="text"></label>
+      <label class="span-2">Support message<textarea name="support_message" rows="3"></textarea></label>
+      <label class="span-2">Footer text<textarea name="footer_text" rows="3"></textarea></label>
+      <label class="span-2">Consent text<textarea name="consent_text" rows="3"></textarea></label>
+      <label class="span-2">SEO description<textarea name="seo_description" rows="3"></textarea></label>
+      <div class="admin-actions span-2">
+        <button type="submit" class="btn">Save Settings</button>
+        <a href="admin-website-control.html" class="btn secondary-btn">Back</a>
+      </div>
+    </form>
+  </main>
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+</body>
+</html>

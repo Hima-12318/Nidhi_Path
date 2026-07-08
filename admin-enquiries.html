@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Enquiries | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page" data-admin-page="enquiries">
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo"><span class="brand-text">Nidhi Path</span></a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+  <main class="admin-main">
+    <section class="admin-heading">
+      <p class="eyebrow">Lead Intake</p>
+      <h1>Enquiries</h1>
+      <p>Review website leads from quick enquiry, contact form, apply now and live chat starts.</p>
+    </section>
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+    <form class="admin-panel admin-filter-bar" id="admin-enquiry-filters">
+      <input type="search" id="enquiry-search" placeholder="Search name, phone, email, reference or service">
+      <select id="enquiry-status-filter" aria-label="Filter by status"></select>
+      <select id="enquiry-service-filter" aria-label="Filter by service"></select>
+      <button type="submit" class="btn">Apply</button>
+      <button type="button" class="btn secondary-btn" id="enquiry-filter-reset">Reset</button>
+    </form>
+    <div class="admin-panel">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Reference ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Service</th><th>Source form</th><th>Status</th><th>Created at</th><th>Action</th></tr>
+          </thead>
+          <tbody id="admin-enquiries-body"></tbody>
+        </table>
+      </div>
+      <p class="admin-table-note" id="admin-enquiries-pagination"></p>
+    </div>
+  </main>
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+</body>
+</html>

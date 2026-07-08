@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Commissions | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page smartcrm-admin-page smartcrm-command-page" data-admin-page="commissions">
+  <div class="smartcrm-shell">
+    <aside class="smartcrm-sidebar" aria-label="SmartCRM navigation">
+      <a class="smartcrm-brand" href="admin-dashboard.html" data-no-translate>
+        <img src="logo.jpg" alt="Nidhi Path logo">
+        <span>
+          <strong>NIDHI PATH</strong>
+          <small>SMARTCRM INTELLIGENCE</small>
+        </span>
+      </a>
+
+      <nav class="smartcrm-side-nav">
+        <a href="admin-dashboard.html"><span>01</span>Dashboard</a>
+        <a href="admin-users.html"><span>02</span>Users</a>
+        <a href="admin-crm.html"><span>03</span>CRM</a>
+        <a href="admin-reports.html#employee-performance-overview"><span>04</span>Employee Performance</a>
+        <a href="admin-reports.html"><span>05</span>Reports</a>
+        <a class="is-active" href="admin-commissions.html"><span>06</span>Commissions</a>
+        <a href="admin-reports.html#business-analytics"><span>07</span>Business Analytics</a>
+        <a href="admin-reports.html#smart-alerts-panel"><span>08</span>Alerts <em id="admin-alert-count">0</em></a>
+        <a href="admin-site-settings.html"><span>09</span>Settings</a>
+        <a href="login.html#employee" data-admin-logout><span>10</span>Logout</a>
+      </nav>
+
+      <div class="smartcrm-profile-card">
+        <div class="smartcrm-profile-mark">NP</div>
+        <div>
+          <strong>Nidhi Path Finance</strong>
+          <span>Super Admin</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="smartcrm-workspace">
+      <header class="smartcrm-pagebar">
+        <div>
+          <h1>Admin Commissions</h1>
+          <p>Partner-wise commission due, paid, hold and payment tracking</p>
+        </div>
+        <div class="smartcrm-toolbar">
+          <a class="smartcrm-tool-button" href="admin-reports.html">Open Reports</a>
+          <button type="button" class="smartcrm-tool-button" data-smartcrm-export="commission">Export JSON</button>
+          <button type="button" class="smartcrm-tool-button danger" data-admin-logout>Logout</button>
+        </div>
+      </header>
+
+      <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+
+      <section class="smartcrm-kpi-strip smartcrm-kpi-strip-three" aria-label="Commission KPIs">
+        <article class="smartcrm-kpi-card tone-red">
+          <span class="smartcrm-kpi-icon">D</span>
+          <div><small>Total Commission Due</small><strong id="admin-commission-due">Rs. 0</strong><em class="is-warning">Payable queue</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-green">
+          <span class="smartcrm-kpi-icon">P</span>
+          <div><small>Total Commission Paid</small><strong id="admin-commission-paid">Rs. 0</strong><em>Cleared partners</em></div>
+        </article>
+        <article class="smartcrm-kpi-card tone-gold">
+          <span class="smartcrm-kpi-icon">T</span>
+          <div><small>Total Commission Value</small><strong id="admin-commission-total-value">Rs. 0</strong><em>Due plus paid</em></div>
+        </article>
+      </section>
+
+      <section class="smartcrm-card smartcrm-commission-page-card">
+        <div class="smartcrm-card-head">
+          <h2>Commission Filters</h2>
+          <span class="status-pill">Admin / CEO</span>
+        </div>
+        <form class="admin-filter-bar smartcrm-commission-filter-bar" id="commission-filters">
+          <label>Partner Type
+            <select id="commission-partner-type-filter">
+              <option value="">All</option>
+              <option value="connector">Connector</option>
+              <option value="client_consultant">Client / Consultant</option>
+              <option value="own_self">Own / Self</option>
+              <option value="online_reference">Online Reference</option>
+              <option value="banker_reference">Banker Reference</option>
+              <option value="employee_reference">Employee Reference</option>
+            </select>
+          </label>
+          <label>Status
+            <select id="commission-status-filter">
+              <option value="">All</option>
+              <option value="paid">Paid</option>
+              <option value="due">Due</option>
+              <option value="hold">Hold</option>
+              <option value="not_applicable">Not Applicable</option>
+            </select>
+          </label>
+          <label>From
+            <input type="date" id="commission-start-date">
+          </label>
+          <label>To
+            <input type="date" id="commission-end-date">
+          </label>
+          <button type="submit" class="btn">Apply</button>
+          <button type="button" class="btn secondary-btn" id="commission-filter-reset">Reset</button>
+        </form>
+      </section>
+
+      <section class="smartcrm-card smartcrm-commission-page-card">
+        <div class="smartcrm-card-head">
+          <h2>Partner-wise Commission Table</h2>
+          <div class="smartcrm-commission-totals">
+            <span>Total Paid <strong id="admin-commission-total-paid">Rs. 0</strong></span>
+            <span>Total Due <strong id="admin-commission-total-due">Rs. 0</strong></span>
+          </div>
+        </div>
+        <div class="smartcrm-commission-table-wrap">
+          <table class="smartcrm-commission-table smartcrm-commission-table-detailed">
+            <thead>
+              <tr>
+                <th>Partner Name</th>
+                <th>Partner Type</th>
+                <th>Commission %</th>
+                <th>Commission Amount</th>
+                <th>Status</th>
+                <th>Paid Date</th>
+                <th>Payment Reference</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="admin-commission-table" data-commission-table="detailed"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="smartcrm-command-footer">All times are in IST</footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+  <script src="smartcrm.js?v=021"></script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nidhi Path Education Loan Assistance</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="home-page">
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path logo"><span class="brand-text">Nidhi Path</span></a>
+      <a href="login.html" class="header-login-link" data-i18n="login">Login</a>
+      <label class="translate-chip" for="language-select">
+        <span data-i18n="translate-label">Translate</span>
+        <select id="language-select" class="language-select">
+          <option value="en">English</option>
+          <option value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option>
+          <option value="te">&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;</option>
+        </select>
+      </label>
+    </div>
+    <div class="header-right">
+      <button class="hamburger" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="index.html" data-i18n="home-nav">Home</a>
+        <a href="services.html" data-i18n="services-nav">Services</a>
+        <a href="about.html" data-i18n="about-us-nav">About Us</a>
+        <a href="eligibility.html" data-i18n="eligibility-nav">Eligibility</a>
+        <a href="contact.html" data-i18n="contact-us-nav">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="tubes-intro" class="tubes-intro" aria-label="Nidhi Path interactive intro">
+      <canvas id="tubes-intro-canvas" class="tubes-intro-canvas"></canvas>
+      <div class="tubes-solar-field" aria-hidden="true">
+        <span class="tubes-solar-field__orbit tubes-solar-field__orbit--one"></span>
+        <span class="tubes-solar-field__orbit tubes-solar-field__orbit--two"></span>
+        <span class="tubes-solar-field__orbit tubes-solar-field__orbit--three"></span>
+        <span class="tubes-solar-field__planet tubes-solar-field__planet--one"></span>
+        <span class="tubes-solar-field__planet tubes-solar-field__planet--two"></span>
+        <span class="tubes-solar-field__planet tubes-solar-field__planet--three"></span>
+      </div>
+      <div class="tubes-meteor-field" aria-hidden="true">
+        <span class="tubes-meteor"></span>
+        <span class="tubes-meteor"></span>
+        <span class="tubes-meteor"></span>
+        <span class="tubes-meteor"></span>
+        <span class="tubes-meteor"></span>
+        <span class="tubes-meteor"></span>
+        <span class="tubes-meteor"></span>
+        <span class="tubes-meteor"></span>
+        <span class="tubes-meteor"></span>
+      </div>
+      <div class="tubes-galaxy" aria-hidden="true">
+        <span class="tubes-galaxy__dust"></span>
+        <span class="tubes-galaxy__disc"></span>
+        <span class="tubes-galaxy__core"></span>
+        <span class="tubes-galaxy__orbit tubes-galaxy__orbit--outer"></span>
+        <span class="tubes-galaxy__orbit tubes-galaxy__orbit--inner"></span>
+        <span class="tubes-galaxy__planet tubes-galaxy__planet--gold"></span>
+        <span class="tubes-galaxy__planet tubes-galaxy__planet--green"></span>
+        <span class="tubes-galaxy__planet tubes-galaxy__planet--blue"></span>
+        <span class="tubes-galaxy__star tubes-galaxy__star--one"></span>
+        <span class="tubes-galaxy__star tubes-galaxy__star--two"></span>
+        <span class="tubes-galaxy__star tubes-galaxy__star--three"></span>
+      </div>
+      <div class="tubes-intro-overlay">
+        <h1 class="tubes-intro-brand">Nidhi Path</h1>
+        <p class="tubes-intro-tagline">Loan Ventures</p>
+        <p class="tubes-intro-title">Education Loan <span>Guidance</span></p>
+        <p class="tubes-intro-lead">
+          Move your cursor to interact &middot; click anywhere to recolor the lights
+        </p>
+        <div class="tubes-intro-actions">
+          <a class="btn tubes-intro-cta" href="#home">Explore the Journey</a>
+          <a class="btn secondary-btn tubes-intro-secondary" href="eligibility.html?service=Education%20Loan#advanced-emi-planner">Check My Eligibility</a>
+        </div>
+        <a class="tubes-intro-scroll" href="#home" aria-label="Scroll to main content">
+          <span></span>
+        </a>
+      </div>
+    </section>
+
+    <section id="home" class="hero home-hero">
+      <div class="hero-content home-hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Education Loan Specialist</p>
+          <h1 class="dynamic-hero-title">
+            Shape Your
+            <span class="hero-rotating-word" id="hero-rotating-word">Ambition</span>
+            With Guided Support
+          </h1>
+          <p class="hero-lead">
+            Nidhi Path Loan Ventures helps students and parents prepare for education loans with clear consultation, document preparation, EMI planning and practical multiple bank process guidance.
+          </p>
+          <div class="hero-lower-content">
+            <section class="hero-responsible-card" aria-label="Responsible guidance">
+              <p class="eyebrow">Responsible Guidance</p>
+              <h2>Transparent support without false approval promises</h2>
+              <p>
+              Education loan approval depends on bank policy, admission details, eligibility,
+              documents, co-applicant profile and verification. Nidhi Path keeps the process
+              transparent and helps students prepare better before submission.
+              </p>
+            </section>
+          </div>
+          <div class="hero-actions hero-left-actions">
+            <button type="button" class="btn apply-btn" data-service="Education Loan">Apply Now</button>
+            <a class="btn secondary-btn" href="eligibility.html?service=Education%20Loan#advanced-emi-planner">Check My Eligibility</a>
+          </div>
+        </div>
+        <div class="hero-story-card" aria-label="Changing education loan guidance highlights">
+          <div class="hero-story-slide hero-story-ambition is-active" data-hero-index="0">
+            <div class="hero-story-overlay">
+              <img src="logo.jpg" alt="Nidhi Path Loan Ventures logo">
+              <span>Ambition Mapping</span>
+              <h2>Start with a practical loans route</h2>
+              <p>Course fee, living expenses, books and travel planning in one discussion.</p>
+            </div>
+          </div>
+          <div class="hero-story-slide hero-story-direction" data-hero-index="1">
+            <div class="hero-story-overlay">
+              <img src="logo.jpg" alt="Nidhi Path Loan Ventures logo">
+              <span>Direction Desk</span>
+              <h2>Prepare before multiple bank discussion</h2>
+              <p>Admission proof, co-applicant details and repayment comfort mapped clearly.</p>
+            </div>
+          </div>
+          <div class="hero-story-slide hero-story-milestone" data-hero-index="2">
+            <div class="hero-story-overlay">
+              <img src="logo.jpg" alt="Nidhi Path Loan Ventures logo">
+              <span>Milestone Budgeting</span>
+              <h2>Plan study costs with family clarity</h2>
+              <p>Country-aware guidance for tuition, living cost and supporting documents.</p>
+            </div>
+          </div>
+          <div class="hero-story-slide hero-story-momentum" data-hero-index="3">
+            <div class="hero-story-overlay">
+              <img src="logo.jpg" alt="Nidhi Path Loan Ventures logo">
+              <span>Momentum Support</span>
+              <h2>Move with documented confidence</h2>
+              <p>Transparent guidance without approval promises or confusing shortcuts.</p>
+            </div>
+          </div>
+          <div class="hero-metric-stack" aria-label="Education loan planning highlights">
+            <article><strong>&#8377;1Cr</strong><span>Maximum loans guidance</span></article>
+            <article><strong>Up To 15 Yrs</strong><span>Repayment planning</span></article>
+            <article><strong>72 Hrs</strong><span>Initial file review</span></article>
+          </div>
+          <div class="hero-story-dots" aria-hidden="true">
+            <span class="is-active" data-hero-dot="0"></span>
+            <span data-hero-dot="1"></span>
+            <span data-hero-dot="2"></span>
+            <span data-hero-dot="3"></span>
+          </div>
+        </div>
+        <div class="hero-side-content">
+          <div class="hero-feature-grid">
+            <span>Low Interest Rates</span>
+            <span>Quick Loan Approval</span>
+            <span>Study Abroad Support</span>
+            <span>Flexible Repayment</span>
+            <span>Multiple Bank Options</span>
+            <span>Minimal Documentation</span>
+          </div>
+          <div class="hero-proof-row">
+            <article role="link" tabindex="0" data-nav-target="education-loan.html"><strong>Study in India</strong><span>College fee financing</span></article>
+            <article role="link" tabindex="0" data-nav-target="education-loan.html"><strong>Study Abroad</strong><span>Overseas loan planning</span></article>
+            <article role="link" tabindex="0" data-nav-target="eligibility.html#advanced-emi-planner"><strong>EMI Planning</strong><span>Repayment clarity</span></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="image-carousel-section" aria-label="Nidhi Path service highlights">
+      <div class="carousel-heading">
+        <p class="eyebrow">Education Loan Support</p>
+        <h2>Clear guidance for students, parents and college fee financing</h2>
+      </div>
+      <div class="image-carousel" aria-hidden="true">
+        <div class="image-track">
+          <article class="image-slide slide-education"><span>Education Loans</span></article>
+          <article class="image-slide slide-family"><span>Parent Co-applicant Guidance</span></article>
+          <article class="image-slide slide-documents"><span>Admission Document Support</span></article>
+          <article class="image-slide slide-business"><span>Study Abroad Planning</span></article>
+          <article class="image-slide slide-home"><span>University Fee Planning</span></article>
+          <article class="image-slide slide-consult"><span>Student Guidance</span></article>
+          <article class="image-slide slide-education"><span>Education Loans</span></article>
+          <article class="image-slide slide-family"><span>Parent Co-applicant Guidance</span></article>
+          <article class="image-slide slide-documents"><span>Admission Document Support</span></article>
+          <article class="image-slide slide-business"><span>Study Abroad Planning</span></article>
+          <article class="image-slide slide-home"><span>University Fee Planning</span></article>
+          <article class="image-slide slide-consult"><span>Student Guidance</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="visual-story-section" aria-label="Visual guide to Nidhi Path support">
+      <div class="visual-story-shell">
+        <div class="visual-story-head">
+          <div>
+            <p class="eyebrow">Student Loan Journey</p>
+            <h2>Understand education loan support through clear visuals</h2>
+          </div>
+        </div>
+        <div class="visual-card-grid">
+          <article class="visual-card visual-study-goal">
+            <div class="visual-card-content">
+              <span>Step 01</span>
+              <strong>Course and country goal</strong>
+              <p>Student plans are mapped for India or abroad with admission and expense context.</p>
+            </div>
+          </article>
+          <article class="visual-card visual-cost-map">
+            <div class="visual-card-content">
+              <span>Step 02</span>
+              <strong>Fee and living-cost picture</strong>
+              <p>Tuition, travel, books, equipment and living expenses are arranged into a clear estimate.</p>
+            </div>
+          </article>
+          <article class="visual-card visual-family-ready">
+            <div class="visual-card-content">
+              <span>Step 03</span>
+              <strong>Family and co-applicant preparation</strong>
+              <p>Parents and guardians understand their role, documents and repayment comfort.</p>
+            </div>
+          </article>
+          <article class="visual-card visual-doc-file">
+            <div class="visual-card-content">
+              <span>Step 04</span>
+              <strong>Document file review</strong>
+              <p>KYC, academics, bank statements, income proof and fee schedules are organized.</p>
+            </div>
+          </article>
+          <article class="visual-card visual-emi-roadmap">
+            <div class="visual-card-content">
+              <span>Step 05</span>
+              <strong>EMI and repayment roadmap</strong>
+              <p>Families can understand approximate monthly commitment before formal processing.</p>
+            </div>
+          </article>
+          <article class="visual-card visual-status-track">
+            <div class="visual-card-content">
+              <span>Step 06</span>
+              <strong>Follow-up and tracking support</strong>
+              <p>Students and parents receive timely reminders for document gaps, bank updates and next-step preparation.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="company-help-section">
+      <div class="company-help-grid">
+        <article class="info-card">
+          <p class="eyebrow">About Nidhi Path</p>
+          <h2>Education loan assistance for academic dreams</h2>
+          <p>
+            Nidhi Path Loan Ventures helps students and families plan education loans for higher studies in India and abroad. The platform focuses on admission-based loans, college fee financing, co-applicant preparation, document preparation and bank education loan assistance.
+            The purpose is simple: reduce confusion, compare suitable options and help every student move toward formal application with clarity.
+          </p>
+        </article>
+        <article class="info-card">
+          <p class="eyebrow">Student Support</p>
+          <h2>Where we assist</h2>
+          <ul class="check-list">
+            <li>Domestic and study abroad education loan guidance</li>
+            <li>Student eligibility check and documentation preparation</li>
+            <li>Parent or co-applicant profile preparation</li>
+            <li>Bank education loan assistance without false approval promises</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="home-focus-section">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Education Loan Services</p>
+        <h2>Focused support for students, parents and admission-based loans</h2>
+        <p>
+          Education loans involve admission proof, course expenses, co-applicant details,
+          repayment planning and bank-specific documentation. We help families organize every
+          discussion before they approach the formal loan process.
+        </p>
+      </div>
+      <div class="dense-card-grid three-card-grid">
+        <article class="compact-card">
+          <span>01</span>
+          <h3>Domestic Education Loans</h3>
+          <p>Guidance for approved Indian colleges, course fees, academic records and parent or guardian preparation.</p>
+        </article>
+        <article class="compact-card">
+          <span>02</span>
+          <h3>Abroad Education Loans</h3>
+          <p>Support for admission letters, living cost planning, travel expenses and collateral preparation where required.</p>
+        </article>
+        <article class="compact-card">
+          <span>03</span>
+          <h3>Student Eligibility Check</h3>
+          <p>Profile review for course, admission, co-applicant strength, documents and repayment comfort.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="process-strip-section">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Student Loan Impact</p>
+        <h2>Education financing support built around real student needs</h2>
+      </div>
+      <div class="process-strip">
+        <article><strong>1,200+</strong><span>Students Supported</span></article>
+        <article><strong>25+</strong><span>Partner Banks</span></article>
+        <article><strong>900+</strong><span>Loan Approvals Guided</span></article>
+        <article><strong>15+</strong><span>Countries Covered</span></article>
+        <article><strong>72 Hrs</strong><span>Eligibility Review</span></article>
+        <article><strong>100%</strong><span>Education Loan Focus</span></article>
+      </div>
+    </section>
+
+    <section class="next-dashboard-section">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Student Stories</p>
+        <h2>Families trust Nidhi Path for education loan guidance</h2>
+        <p>Students and parents use our education loan assistance to understand eligibility, compare bank options, prepare documents and move confidently toward college fee financing.</p>
+      </div>
+      <div class="dashboard-preview-grid">
+        <article><strong>Ananya, MS Student</strong><span>Nidhi Path helped my family understand study abroad loan options, living cost estimates and document preparation before my university deadline.</span></article>
+        <article><strong>Ravi, Parent</strong><span>The team explained co-applicant requirements, income documents and repayment planning clearly, which made the education loan process less stressful.</span></article>
+        <article><strong>Meghana, Engineering Student</strong><span>I received guidance for college fee financing, eligibility checks and bank comparison without confusing promises.</span></article>
+        <article><strong>Arjun, MBA Applicant</strong><span>The admission letter, fee schedule and EMI planning were organized in one place before approaching the bank.</span></article>
+        <article><strong>Sneha, Parent</strong><span>We understood the difference between tuition, living expenses and margin money before selecting an education loan route.</span></article>
+        <article><strong>Kiran, Study Abroad Applicant</strong><span>The counseling helped me prepare academic records, KYC, income proof and travel-cost estimates for my loan discussion.</span></article>
+      </div>
+    </section>
+
+    <section id="about" class="destination-planner-section">
+      <div class="destination-shell">
+        <div class="destination-intro">
+          <p class="eyebrow">Destination-Smart Education Loan Guidance</p>
+          <h2>Plan education loans for India and popular study-abroad routes</h2>
+          <p>
+            Nidhi Path helps students and parents prepare country-aware loan discussions:
+            admission proof, course expenses, living cost estimates, travel needs,
+            co-applicant preparation, collateral questions and EMI planning.
+          </p>
+        </div>
+
+        <div class="destination-summary-panel">
+          <article><strong>India + Abroad</strong><span>Domestic and overseas admission-based planning.</span></article>
+          <article><strong>Expense Mapping</strong><span>Tuition, living cost, books, equipment and travel.</span></article>
+          <article><strong>Family Preparation</strong><span>Parent/co-applicant documents and repayment comfort.</span></article>
+        </div>
+
+        <div class="destination-toolbar" aria-label="Study destination filters">
+          <button type="button" class="destination-filter is-active" data-destination-filter="all">All</button>
+          <button type="button" class="destination-filter" data-destination-filter="india">India</button>
+          <button type="button" class="destination-filter" data-destination-filter="north-america">North America</button>
+          <button type="button" class="destination-filter" data-destination-filter="europe">Europe</button>
+          <button type="button" class="destination-filter" data-destination-filter="asia-pacific">Asia Pacific</button>
+          <span id="destination-filter-count">Showing all guidance cards</span>
+        </div>
+
+        <div class="destination-grid">
+          <article class="destination-card destination-card--india priority-card" data-destination-group="india" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">IN</span>
+              <div><h3>Study in India</h3><p>Domestic education loan guidance</p></div>
+            </div>
+            <p>For professional, technical, management and higher-education courses with fee schedule, academic record and parent/co-applicant preparation.</p>
+            <div class="destination-tags"><span>Admission proof</span><span>Fee schedule</span><span>Parent support</span></div>
+          </article>
+
+          <article class="destination-card destination-card--us" data-destination-group="north-america" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">US</span>
+              <div><h3>United States</h3><p>High-value overseas planning</p></div>
+            </div>
+            <p>Guidance for tuition planning, living-cost estimate, travel, visa loan discussion and collateral preparation where applicable.</p>
+            <div class="destination-tags"><span>STEM</span><span>Graduate study</span><span>Living cost</span></div>
+          </article>
+
+          <article class="destination-card destination-card--uk" data-destination-group="europe" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">UK</span>
+              <div><h3>United Kingdom</h3><p>Postgraduate and professional routes</p></div>
+            </div>
+            <p>Support for admission letter, tuition estimate, accommodation planning and repayment discussion for family decision-making.</p>
+            <div class="destination-tags"><span>Masters</span><span>Travel</span><span>Co-applicant</span></div>
+          </article>
+
+          <article class="destination-card destination-card--canada" data-destination-group="north-america" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">CA</span>
+              <div><h3>Canada</h3><p>Study and living-cost preparation</p></div>
+            </div>
+            <p>Country-aware checklist support for tuition, living loans, student profile, parent details and bank process preparation.</p>
+            <div class="destination-tags"><span>Tuition</span><span>GIC planning</span><span>KYC</span></div>
+          </article>
+
+          <article class="destination-card destination-card--australia" data-destination-group="asia-pacific" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">AU</span>
+              <div><h3>Australia</h3><p>Overseas education loans guidance</p></div>
+            </div>
+            <p>Planning support for university expenses, accommodation estimate, travel cost and education-loan repayment assumptions.</p>
+            <div class="destination-tags"><span>Visa loans</span><span>Travel</span><span>EMI plan</span></div>
+          </article>
+
+          <article class="destination-card destination-card--germany" data-destination-group="europe" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">DE</span>
+              <div><h3>Germany</h3><p>Structured budget discussion</p></div>
+            </div>
+            <p>Guidance for tuition, blocked-account style loan planning conversations, living cost and supporting documents.</p>
+            <div class="destination-tags"><span>Budget</span><span>Documents</span><span>Living cost</span></div>
+          </article>
+
+          <article class="destination-card destination-card--ireland" data-destination-group="europe" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">IE</span>
+              <div><h3>Ireland</h3><p>Education loan route preparation</p></div>
+            </div>
+            <p>Support for admission-based expense planning, travel estimate and parent/co-applicant document preparation.</p>
+            <div class="destination-tags"><span>Admission</span><span>Expenses</span><span>Parent docs</span></div>
+          </article>
+
+          <article class="destination-card destination-card--france" data-destination-group="europe" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">FR</span>
+              <div><h3>France</h3><p>Tuition and living-cost guidance</p></div>
+            </div>
+            <p>Planning for course fee, accommodation, local expenses and document checklist before formal discussion with multiple banks.</p>
+            <div class="destination-tags"><span>Tuition</span><span>Housing</span><span>Checklist</span></div>
+          </article>
+
+          <article class="destination-card destination-card--netherlands" data-destination-group="europe" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">NL</span>
+              <div><h3>Netherlands</h3><p>International study planning</p></div>
+            </div>
+            <p>Guidance around course cost, living estimate, student documents and loan repayment comfort for families.</p>
+            <div class="destination-tags"><span>Course fee</span><span>Student KYC</span><span>EMI</span></div>
+          </article>
+
+          <article class="destination-card destination-card--singapore" data-destination-group="asia-pacific" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">SG</span>
+              <div><h3>Singapore</h3><p>Near-abroad study support</p></div>
+            </div>
+            <p>Focused guidance for fee estimate, accommodation planning, travel and compact documentation for faster preparation.</p>
+            <div class="destination-tags"><span>Fee estimate</span><span>Travel</span><span>Faster Preparation</span></div>
+          </article>
+
+          <article class="destination-card destination-card--new-zealand" data-destination-group="asia-pacific" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">NZ</span>
+              <div><h3>New Zealand</h3><p>Student loans preparation</p></div>
+            </div>
+            <p>Support for admission documents, cost estimate, repayment assumptions and family financial planning discussion.</p>
+            <div class="destination-tags"><span>Admission</span><span>Living cost</span><span>Family plan</span></div>
+          </article>
+
+          <article class="destination-card destination-card--sweden" data-destination-group="europe" data-flag="">
+            <div class="destination-card-head">
+              <span class="country-code">SE</span>
+              <div><h3>Sweden</h3><p>Nordic study-cost planning</p></div>
+            </div>
+            <p>Guidance for tuition, living estimate, travel and academic-document preparation before loan option discussion.</p>
+            <div class="destination-tags"><span>Tuition</span><span>Academics</span><span>Travel</span></div>
+          </article>
+        </div>
+
+        <div class="destination-footer-note">
+          <strong>Planning note:</strong>
+          <span>Country cards are guidance categories only. Actual loan amount, margin money, collateral, rate and eligibility depend on course, university, multiple bank policies, documents and credit assessment.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-section home-contact-cta">
+      <h2>Need help planning an education loan?</h2>
+      <p>Share your admission, course fee and study destination details. Our team will guide you with the next practical step.</p>
+      <a class="btn" href="contact.html">Talk to an Education Loan Advisor</a>
+    </section>
+  </main>
+
+  <div class="modal" id="apply-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <h3 id="apply-heading">Apply</h3>
+      <form id="apply-form">
+        <input type="hidden" id="apply-service" value="">
+        <div class="form-group">
+          <label for="apply-name" data-i18n="name-label"></label>
+          <input type="text" id="apply-name" name="name" autocomplete="name" required>
+        </div>
+        <div class="form-group">
+          <label for="apply-email" data-i18n="email-label"></label>
+          <input type="email" id="apply-email" name="email" autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="apply-phone" data-i18n="phone-label"></label>
+          <input type="tel" id="apply-phone" name="phone" autocomplete="tel" placeholder="+91 9876543210" required>
+        </div>
+        <div class="form-group">
+          <label for="apply-amount" data-i18n="loan-amount-needed"></label>
+          <input type="number" id="apply-amount" name="loanAmount" required>
+        </div>
+        <div class="form-group">
+          <label for="apply-tenure" data-i18n="loan-tenure"></label>
+          <input type="number" id="apply-tenure" name="tenure" required>
+        </div>
+        <div class="form-group">
+          <label for="apply-message" data-i18n="message-label"></label>
+          <textarea id="apply-message" name="message" rows="3" required></textarea>
+        </div>
+        <input type="text" id="apply-website" name="companyWebsite" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="form-consent">By submitting this form, you agree that Nidhi Path Loan Ventures may contact you regarding your enquiry.</p>
+        <div class="form-group">
+          <button type="submit" class="btn" data-i18n-btn="submit"></button>
+        </div>
+        <p class="form-status" id="apply-form-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>Education Loan Services</h4>
+        <ul class="footer-link-list">
+          <li><a href="education-loan.html">Domestic Education Loans</a></li>
+          <li><a href="education-loan.html">Abroad Education Loans</a></li>
+          <li><a href="eligibility.html">Student Eligibility Check</a></li>
+          <li><a href="education-loan.html">Loan Comparison Assistance</a></li>
+          <li><a href="eligibility.html#advanced-emi-planner">Education Loan EMI Planning</a></li>
+          <li><a href="contact.html">Admission + Loan Guidance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="contact-title"></h4>
+        <p>Vamsi Krishna Kiliampalli</p>
+        <p>Managing Director</p>
+        <p><a href="tel:+919705682595">+91 97056 82595</a></p>
+        <p><a href="mailto:info@nidhipath.in">info@nidhipath.in</a></p>
+      </div>
+      <div>
+        <h4><span class="brand-name">Nidhi Path</span></h4>
+        <p>Way to Money</p>
+        <p>Vijayawada, Andhra Pradesh</p>
+      </div>
+    </div>
+    <p>&copy; 2026 <span class="brand-name brand-name-inline">Nidhi Path</span> Loan Ventures. All rights reserved. Terms &amp; Conditions Apply. Loan approval is subject to bank policies, eligibility, verification, documentation, and credit assessment.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="script.js"></script>
+  <script type="module">
+    // Interactive 3D tubes intro (brand palette: navy / green / gold).
+    // The CDN bundle re-exports a default factory and includes three.js internally,
+    // so no extra dependency is required.
+    import TubesCursor from "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js";
+
+    const canvas = document.getElementById("tubes-intro-canvas");
+    const intro = document.getElementById("tubes-intro");
+    if (canvas && intro) {
+      const BRAND_TUBES = ["#005B4F", "#C99A2E", "#1F4E8C"];
+      const BRAND_LIGHTS = ["#C99A2E", "#005B4F", "#1F4E8C", "#F8F6F1"];
+
+      const app = TubesCursor(canvas, {
+        tubes: {
+          colors: BRAND_TUBES,
+          lights: { intensity: 200, colors: BRAND_LIGHTS }
+        }
+      });
+
+      // Click anywhere on the intro to recolor the lights with a brand-tinted random set.
+      const tinted = () =>
+        Array.from({ length: 4 }, () => {
+          const palette = ["#C99A2E", "#005B4F", "#1F4E8C", "#F8F6F1", "#8FB339", "#E8C36A"];
+          return palette[Math.floor(Math.random() * palette.length)];
+        });
+      intro.addEventListener("click", () => {
+        try {
+          app.tubes.setColors(BRAND_TUBES);
+          app.tubes.setLightsColors(tinted());
+        } catch (_) { /* library not ready yet */ }
+      });
+    }
+  </script>
+</body>
+</html>

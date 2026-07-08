@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Control | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page" data-admin-page="websiteControl">
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo"><span class="brand-text">Nidhi Path</span></a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+  <main class="admin-main">
+    <section class="admin-heading">
+      <p class="eyebrow">Website Control</p>
+      <h1>Website Control</h1>
+      <p>Manage future-ready website settings, services, sections, navigation and media records.</p>
+    </section>
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+    <section class="admin-metric-grid">
+      <article><span>Active services</span><strong id="website-active-services">0</strong></article>
+      <article><span>Visible content sections</span><strong id="website-visible-sections">0</strong></article>
+      <article><span>Navigation items</span><strong id="website-navigation-items">0</strong></article>
+      <article><span>Media records</span><strong id="website-media-files">0</strong></article>
+    </section>
+    <section class="admin-card-grid">
+      <a class="admin-control-card" href="admin-site-settings.html"><strong>Site Settings</strong><span>Business details, contact info, SEO and consent text</span></a>
+      <a class="admin-control-card" href="admin-services.html"><strong>Services</strong><span>Service catalog records and display order</span></a>
+      <a class="admin-control-card" href="admin-content-sections.html"><strong>Content Sections</strong><span>Editable section records for future dynamic pages</span></a>
+      <a class="admin-control-card" href="admin-navigation.html"><strong>Navigation</strong><span>Menu links and visibility records</span></a>
+      <a class="admin-control-card" href="admin-media-library.html"><strong>Media Library</strong><span>Image and media URL records</span></a>
+    </section>
+    <section class="admin-panel">
+      <div class="admin-panel-head">
+        <h2>Default Data</h2>
+        <button type="button" class="btn" id="seed-site-defaults">Seed Defaults</button>
+      </div>
+      <p>Use this once if the site-management tables are empty. It will not overwrite existing admin edits.</p>
+    </section>
+  </main>
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Details | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="content-page smartcrm-page" data-smartcrm-page="employee-detail">
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="header-home-link brand-name">
+        <img class="site-logo" src="logo.jpg" alt="Nidhi Path logo">
+        <span class="brand-text">Nidhi Path</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <button class="hamburger" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="employee-dashboard.html">Dashboard</a>
+        <button type="button" class="header-login-link" onclick="window.NIDHI_logoutUser ? window.NIDHI_logoutUser() : location.href='login.html'">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-main smartcrm-main">
+    <section class="smartcrm-hero">
+      <p class="eyebrow">Employee Workspace</p>
+      <h1>Details for <span id="employee-detail-name">Employee</span></h1>
+      <p>Commission and client private contacts are hidden.</p>
+    </section>
+    <p class="form-status" id="smartcrm-status" aria-live="polite"></p>
+
+    <section class="admin-panel">
+      <div class="admin-panel-head">
+        <h2 id="employee-card-detail-title">Details</h2>
+        <a href="employee-dashboard.html" class="table-action">Back to Dashboard</a>
+      </div>
+      <div id="employee-card-detail-body">
+        <p class="admin-table-note">Loading details...</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="user.js"></script>
+  <script src="smartcrm.js?v=028"></script>
+</body>
+</html>

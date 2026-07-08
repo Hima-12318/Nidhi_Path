@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Intelligence | Nidhi Path SmartCRM</title>
+  <link rel="stylesheet" href="style.css?v=016">
+  <style>
+    /* ─── Board Dashboard ─── */
+    .board-shell {
+      display: flex;
+      min-height: 100vh;
+      background: #f0f4f9;
+    }
+
+    .board-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: #061e42;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .board-sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.5rem 1.25rem 1rem;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .board-sidebar-brand img { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; }
+    .board-sidebar-brand strong { color: #fff; font-size: 0.92rem; font-weight: 800; display: block; line-height: 1.2; }
+    .board-sidebar-brand small { color: #c99a2e; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; display: block; }
+
+    .board-sidebar-nav { padding: 1rem 0; flex: 1; }
+    .board-sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.72rem 1.25rem;
+      color: rgba(255,255,255,0.62);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .board-sidebar-nav a:hover, .board-sidebar-nav a.is-active {
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+      border-left-color: #c99a2e;
+    }
+    .board-sidebar-nav a .nav-num {
+      width: 18px; height: 18px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      display: grid; place-items: center;
+      flex-shrink: 0;
+    }
+
+    .board-sidebar-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .board-role-card {
+      background: rgba(201,154,46,0.15);
+      border: 1px solid rgba(201,154,46,0.3);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .board-role-card strong { color: #c99a2e; font-size: 0.8rem; display: block; }
+    .board-role-card span { color: rgba(255,255,255,0.5); font-size: 0.7rem; display: block; margin-top: 0.2rem; }
+
+    .board-main {
+      flex: 1;
+      min-width: 0;
+      overflow-y: auto;
+    }
+
+    .board-topbar {
+      background: #fff;
+      border-bottom: 1px solid #dfe5ef;
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .board-topbar-left h1 { font-size: 1rem; font-weight: 800; color: #061e42; }
+    .board-topbar-left p { font-size: 0.75rem; color: #687187; margin-top: 0.1rem; }
+    .board-readonly-badge {
+      background: #fff7e0;
+      border: 1px solid #c99a2e;
+      color: #92660a;
+      padding: 0.3rem 0.9rem;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .board-readonly-badge::before {
+      content: "🔒";
+      font-size: 0.8rem;
+    }
+
+    .board-workspace {
+      padding: 1.5rem 2rem 3rem;
+      max-width: 1400px;
+    }
+
+    /* KPI Strip */
+    .board-kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .board-kpi-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      border: 1px solid #e9eef5;
+      box-shadow: 0 1px 4px rgba(6,30,66,0.05);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .board-kpi-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .board-kpi-icon.indigo { background: #eeeafd; color: #6554e8; }
+    .board-kpi-icon.blue { background: #eaf4ff; color: #1d8fe8; }
+    .board-kpi-icon.green { background: #e8fbf0; color: #15a350; }
+    .board-kpi-icon.teal { background: #e4f9f8; color: #0f9f9f; }
+    .board-kpi-icon.gold { background: #fff8e0; color: #c17d00; }
+    .board-kpi-icon.sky { background: #e0f6ff; color: #0095cc; }
+    .board-kpi-icon.red { background: #fee8e8; color: #dc3545; }
+    .board-kpi-icon.violet { background: #f5eeff; color: #8b5cf6; }
+    .board-kpi-body small { display: block; font-size: 0.72rem; font-weight: 700; color: #687187; text-transform: uppercase; letter-spacing: 0.04em; }
+    .board-kpi-body strong { display: block; font-size: 1.45rem; font-weight: 800; color: #061e42; line-height: 1.2; margin-top: 0.2rem; }
+    .board-kpi-body em { display: block; font-size: 0.7rem; color: #15a350; font-style: normal; font-weight: 700; margin-top: 0.2rem; }
+    .board-kpi-body em.warn { color: #dc3545; }
+
+    /* Grid Sections */
+    .board-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .board-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .board-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e9eef5;
+      box-shadow: 0 1px 4px rgba(6,30,66,0.05);
+      overflow: hidden;
+    }
+    .board-card-head {
+      padding: 1rem 1.4rem 0.75rem;
+      border-bottom: 1px solid #f0f4f9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .board-card-head h2 {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #061e42;
+      letter-spacing: 0.01em;
+    }
+    .board-card-head .eyebrow {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #687187;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .board-card-body { padding: 1.2rem 1.4rem; }
+
+    /* Funnel */
+    .board-funnel { display: flex; flex-direction: column; gap: 0.6rem; }
+    .board-funnel-row { display: flex; align-items: center; gap: 0.75rem; }
+    .board-funnel-label { font-size: 0.75rem; font-weight: 700; color: #687187; width: 130px; flex-shrink: 0; }
+    .board-funnel-bar-wrap { flex: 1; background: #f0f4f9; border-radius: 6px; height: 10px; overflow: hidden; }
+    .board-funnel-bar { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #1d8fe8, #6554e8); transition: width 0.6s ease; }
+    .board-funnel-val { font-size: 0.78rem; font-weight: 800; color: #061e42; width: 32px; text-align: right; flex-shrink: 0; }
+
+    /* Employee Leaderboard */
+    .board-leaderboard { display: flex; flex-direction: column; gap: 0; }
+    .board-leader-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid #f0f4f9;
+    }
+    .board-leader-row:last-child { border-bottom: none; }
+    .board-rank {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: #f0f4f9;
+      display: grid; place-items: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #687187;
+      flex-shrink: 0;
+    }
+    .board-rank.gold { background: #fff8e0; color: #c17d00; }
+    .board-rank.silver { background: #f5f5f7; color: #6b7280; }
+    .board-rank.bronze { background: #fff3eb; color: #c05c1a; }
+    .board-leader-name { flex: 1; font-size: 0.82rem; font-weight: 700; color: #061e42; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .board-leader-stats { display: flex; gap: 0.5rem; align-items: center; }
+    .board-leader-chip {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      background: #f0f4f9;
+      color: #687187;
+    }
+    .board-score-bar-wrap { width: 60px; background: #f0f4f9; border-radius: 4px; height: 6px; overflow: hidden; }
+    .board-score-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #15a350, #c99a2e); }
+
+    /* Source Performance */
+    .board-source-table { width: 100%; border-collapse: collapse; }
+    .board-source-table th {
+      text-align: left;
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #687187;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0 0 0.5rem;
+      border-bottom: 2px solid #f0f4f9;
+    }
+    .board-source-table td {
+      font-size: 0.78rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid #f7f8fa;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+    .board-source-table td:first-child { font-weight: 700; color: #061e42; }
+    .board-conv-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+    .board-conv-pill.high { background: #e8fbf0; color: #15a350; }
+    .board-conv-pill.mid { background: #fff8e0; color: #c17d00; }
+    .board-conv-pill.low { background: #fee8e8; color: #dc3545; }
+
+    /* Revenue Snapshot */
+    .board-revenue-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+    .board-revenue-item {
+      background: #f7f9fc;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+    }
+    .board-revenue-item label { display: block; font-size: 0.68rem; font-weight: 700; color: #687187; text-transform: uppercase; letter-spacing: 0.05em; }
+    .board-revenue-item strong { display: block; font-size: 1rem; font-weight: 800; color: #061e42; margin-top: 0.3rem; }
+    .board-revenue-item.net strong { color: #15a350; }
+    .board-revenue-item.due strong { color: #dc3545; }
+
+    /* Smart Alerts */
+    .board-alerts { display: flex; flex-direction: column; gap: 0.6rem; }
+    .board-alert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.7rem 0.9rem;
+      border-radius: 8px;
+      background: #f7f9fc;
+      border-left: 3px solid #dfe5ef;
+    }
+    .board-alert-item.warn { background: #fff8e0; border-left-color: #c99a2e; }
+    .board-alert-item.danger { background: #fee8e8; border-left-color: #dc3545; }
+    .board-alert-item.info { background: #eaf4ff; border-left-color: #1d8fe8; }
+    .board-alert-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(6,30,66,0.08);
+      display: grid; place-items: center;
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #687187;
+      flex-shrink: 0;
+    }
+    .board-alert-text { font-size: 0.8rem; font-weight: 600; color: #2c3e50; line-height: 1.5; }
+
+    /* Status */
+    .form-status { padding: 0.6rem 2rem 0; font-size: 0.82rem; }
+    .form-status.is-info { color: #1d6fcc; }
+    .form-status.is-error { color: #dc3545; }
+
+    @media (max-width: 900px) {
+      .board-kpi-strip { grid-template-columns: 1fr 1fr; }
+      .board-grid-2, .board-grid-3 { grid-template-columns: 1fr; }
+      .board-sidebar { display: none; }
+      .board-workspace { padding: 1rem; }
+    }
+  </style>
+</head>
+<body class="content-page smartcrm-page" data-smartcrm-page="board">
+  <div class="board-shell">
+
+    <!-- Sidebar -->
+    <aside class="board-sidebar">
+      <a class="board-sidebar-brand" href="board-dashboard.html">
+        <img src="logo.jpg" alt="Nidhi Path">
+        <span>
+          <strong>NIDHI PATH</strong>
+          <small>SMARTCRM INTELLIGENCE</small>
+        </span>
+      </a>
+      <nav class="board-sidebar-nav">
+        <a class="is-active" href="board-dashboard.html">
+          <span class="nav-num">01</span>Dashboard
+        </a>
+        <a href="board-dashboard.html#board-funnel-section">
+          <span class="nav-num">02</span>Lead Funnel
+        </a>
+        <a href="board-dashboard.html#board-performance-section">
+          <span class="nav-num">03</span>Employee Performance
+        </a>
+        <a href="board-dashboard.html#board-source-section">
+          <span class="nav-num">04</span>Source Intelligence
+        </a>
+        <a href="board-dashboard.html#board-alerts-section">
+          <span class="nav-num">05</span>Smart Alerts
+        </a>
+      </nav>
+      <div class="board-sidebar-footer">
+        <div class="board-role-card">
+          <strong>Board Member</strong>
+          <span>Read-Only Access</span>
+        </div>
+        <a href="login.html" onclick="window.NIDHI_logoutUser ? (event.preventDefault(), window.NIDHI_logoutUser()) : null"
+           style="display:flex;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.4);font-size:0.78rem;font-weight:600;text-decoration:none;padding:0.4rem 0;">
+          <span class="nav-num">↩</span>Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="board-main">
+      <!-- Topbar -->
+      <div class="board-topbar">
+        <div class="board-topbar-left">
+          <h1>Board Intelligence Dashboard</h1>
+          <p>Real-time business analytics &amp; performance overview</p>
+        </div>
+        <div class="board-readonly-badge">Read-Only View</div>
+      </div>
+
+      <p class="form-status" id="smartcrm-status" aria-live="polite"></p>
+
+      <div class="board-workspace">
+
+        <!-- KPI Strip Row 1 -->
+        <div class="board-kpi-strip">
+          <div class="board-kpi-card">
+            <div class="board-kpi-icon indigo">📋</div>
+            <div class="board-kpi-body">
+              <small>Total Leads</small>
+              <strong id="board-total-leads">—</strong>
+              <em>Live CRM pipeline</em>
+            </div>
+          </div>
+          <div class="board-kpi-card">
+            <div class="board-kpi-icon blue">⚡</div>
+            <div class="board-kpi-body">
+              <small>Ongoing Files</small>
+              <strong id="board-ongoing-files">—</strong>
+              <em>Operational queue</em>
+            </div>
+          </div>
+          <div class="board-kpi-card">
+            <div class="board-kpi-icon green">✅</div>
+            <div class="board-kpi-body">
+              <small>Sanctioned</small>
+              <strong id="board-sanctioned">—</strong>
+              <em>Bank approval received</em>
+            </div>
+          </div>
+          <div class="board-kpi-card">
+            <div class="board-kpi-icon teal">💸</div>
+            <div class="board-kpi-body">
+              <small>Disbursed</small>
+              <strong id="board-disbursed">—</strong>
+              <em>Funds released</em>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Strip Row 2 -->
+        <div class="board-kpi-strip" style="margin-top:-0.4rem">
+          <div class="board-kpi-card">
+            <div class="board-kpi-icon gold">📈</div>
+            <div class="board-kpi-body">
+              <small>Gross Income</small>
+              <strong id="board-weekly-income">—</strong>
+              <em>Total revenue</em>
+            </div>
+          </div>
+          <div class="board-kpi-card">
+            <div class="board-kpi-icon sky">💰</div>
+            <div class="board-kpi-body">
+              <small>Net Income</small>
+              <strong id="board-monthly-net-income">—</strong>
+              <em>After expenses</em>
+            </div>
+          </div>
+          <div class="board-kpi-card">
+            <div class="board-kpi-icon red">⚠️</div>
+            <div class="board-kpi-body">
+              <small>Commission Due</small>
+              <strong id="board-commission-due">—</strong>
+              <em class="warn">Payable to partners</em>
+            </div>
+          </div>
+          <div class="board-kpi-card">
+            <div class="board-kpi-icon violet">🏦</div>
+            <div class="board-kpi-body">
+              <small>Commission Paid</small>
+              <strong id="board-commission-paid">—</strong>
+              <em>Cleared to partners</em>
+            </div>
+          </div>
+        </div>
+
+        <!-- Funnel + Leaderboard -->
+        <div class="board-grid-2" id="board-funnel-section">
+          <div class="board-card">
+            <div class="board-card-head">
+              <h2>Lead Funnel</h2>
+              <span class="eyebrow">Conversion Pipeline</span>
+            </div>
+            <div class="board-card-body">
+              <div class="board-funnel" id="board-lead-funnel">
+                <p style="color:#687187;font-size:0.8rem">Loading funnel data...</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="board-card" id="board-performance-section">
+            <div class="board-card-head">
+              <h2>Employee Leaderboard</h2>
+              <span class="eyebrow">Performance Score /100</span>
+            </div>
+            <div class="board-card-body">
+              <div class="board-leaderboard" id="board-employee-performance">
+                <p style="color:#687187;font-size:0.8rem">Loading performance data...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Source + Revenue -->
+        <div class="board-grid-2" id="board-source-section">
+          <div class="board-card">
+            <div class="board-card-head">
+              <h2>Source Intelligence</h2>
+              <span class="eyebrow">Conversion &amp; Disbursed Value</span>
+            </div>
+            <div class="board-card-body">
+              <table class="board-source-table">
+                <thead>
+                  <tr>
+                    <th>Source</th>
+                    <th>Leads</th>
+                    <th>Conv %</th>
+                    <th>Disbursed</th>
+                  </tr>
+                </thead>
+                <tbody id="board-source-performance">
+                  <tr><td colspan="4" style="color:#687187;font-size:0.8rem;padding-top:0.75rem">Loading source data...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="board-card">
+            <div class="board-card-head">
+              <h2>Revenue Snapshot</h2>
+              <span class="eyebrow">Financial Overview</span>
+            </div>
+            <div class="board-card-body">
+              <div class="board-revenue-grid">
+                <div class="board-revenue-item">
+                  <label>Gross Income</label>
+                  <strong id="board-gross-income">—</strong>
+                </div>
+                <div class="board-revenue-item net">
+                  <label>Net Income</label>
+                  <strong id="board-net-income">—</strong>
+                </div>
+                <div class="board-revenue-item">
+                  <label>Partner Commission</label>
+                  <strong id="board-partner-commission">—</strong>
+                </div>
+                <div class="board-revenue-item">
+                  <label>Employee Incentives</label>
+                  <strong id="board-employee-incentives">—</strong>
+                </div>
+                <div class="board-revenue-item" style="grid-column:1/-1">
+                  <label>Daily Update Compliance</label>
+                  <strong><span id="board-daily-submitted">—</span> submitted, <span id="board-daily-pending">—</span> pending</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerts -->
+        <div class="board-card" id="board-alerts-section">
+          <div class="board-card-head">
+            <h2>Smart Alerts</h2>
+            <span class="eyebrow">Action Items for Attention</span>
+          </div>
+          <div class="board-card-body">
+            <div class="board-alerts" id="board-smart-alerts">
+              <p style="color:#687187;font-size:0.8rem">Loading alerts...</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /workspace -->
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="user.js"></script>
+  <script>
+    /* Board-specific render overrides — called by smartcrm.js renderReports */
+    window.BOARD_RENDER_OVERRIDES = true;
+
+    /* Override renderReports funnel to use board-specific premium style */
+    document.addEventListener('DOMContentLoaded', function () {
+      // The smartcrm.js will fire loadBoardDashboard which calls renderReports(data, 'board').
+      // renderReports sets board-lead-funnel, board-employee-performance, board-source-performance,
+      // board-smart-alerts. We hook into those after they are set via MutationObserver or
+      // override the innerHTML assignment using a custom post-process.
+    });
+  </script>
+  <script src="smartcrm.js?v=021"></script>
+  <script>
+    /* Post-process the board data for premium rendering */
+    (function () {
+      var origRenderReports = null;
+
+      function boardFunnel(items) {
+        var el = document.getElementById('board-lead-funnel');
+        if (!el || !items || !items.length) return;
+        var max = Math.max.apply(null, items.map(function(i){ return Number(i.value||0); }));
+        if (!max) max = 1;
+        el.innerHTML = items.map(function(item) {
+          var w = Math.round((Number(item.value||0)/max)*100);
+          return '<div class="board-funnel-row">'
+            + '<div class="board-funnel-label">' + (item.label||'') + '</div>'
+            + '<div class="board-funnel-bar-wrap"><div class="board-funnel-bar" style="width:' + w + '%"></div></div>'
+            + '<div class="board-funnel-val">' + (item.value||0) + '</div>'
+            + '</div>';
+        }).join('');
+      }
+
+      function boardLeaderboard(rows) {
+        var el = document.getElementById('board-employee-performance');
+        if (!el || !rows || !rows.length) {
+          if (el) el.innerHTML = '<p style="color:#687187;font-size:0.8rem">No employee data yet.</p>';
+          return;
+        }
+        var rankClass = ['gold', 'silver', 'bronze'];
+        el.innerHTML = rows.slice(0, 8).map(function(row, i) {
+          var score = Number(row.performanceScore||0);
+          return '<div class="board-leader-row">'
+            + '<div class="board-rank ' + (rankClass[i]||'') + '">' + (i+1) + '</div>'
+            + '<div class="board-leader-name">' + (row.employeeName||'Employee') + '</div>'
+            + '<div class="board-leader-stats">'
+            + '<span class="board-leader-chip">' + (row.leadsHandled||0) + ' leads</span>'
+            + '<div class="board-score-bar-wrap"><div class="board-score-bar" style="width:' + score + '%"></div></div>'
+            + '<span style="font-size:0.7rem;font-weight:800;color:#061e42;min-width:36px;text-align:right">' + score + '/100</span>'
+            + '</div></div>';
+        }).join('');
+      }
+
+      function boardSourcePerf(rows) {
+        var tbody = document.getElementById('board-source-performance');
+        if (!tbody) return;
+        if (!rows || !rows.length) {
+          tbody.innerHTML = '<tr><td colspan="4" style="color:#687187;font-size:0.8rem;padding-top:0.5rem">No source data yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = rows.map(function(row) {
+          var conv = Number(row.conversionRate||0);
+          var cls = conv >= 60 ? 'high' : conv >= 30 ? 'mid' : 'low';
+          var label = (row.source||'').replace(/_/g,' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); });
+          var disbVal = Number(row.disbursedValue||0);
+          var disbStr = disbVal >= 10000000 ? 'Rs. ' + (disbVal/10000000).toFixed(2) + 'Cr'
+                      : disbVal >= 100000 ? 'Rs. ' + (disbVal/100000).toFixed(2) + 'L'
+                      : disbVal ? 'Rs. ' + disbVal.toLocaleString('en-IN') : '—';
+          return '<tr>'
+            + '<td>' + label + '</td>'
+            + '<td>' + (row.totalReferences||0) + '</td>'
+            + '<td><span class="board-conv-pill ' + cls + '">' + conv + '%</span></td>'
+            + '<td>' + disbStr + '</td>'
+            + '</tr>';
+        }).join('');
+      }
+
+      function boardAlerts(alerts) {
+        var el = document.getElementById('board-smart-alerts');
+        if (!el) return;
+        if (!alerts || !alerts.length) {
+          el.innerHTML = '<div class="board-alert-item info"><div class="board-alert-num">✓</div><div class="board-alert-text">No alerts at this time. All systems operational.</div></div>';
+          return;
+        }
+        var colors = ['warn', 'danger', 'info', 'warn', 'danger'];
+        el.innerHTML = alerts.map(function(text, i) {
+          return '<div class="board-alert-item ' + (colors[i%colors.length]||'') + '">'
+            + '<div class="board-alert-num">' + (i+1) + '</div>'
+            + '<div class="board-alert-text">' + (text||'') + '</div>'
+            + '</div>';
+        }).join('');
+      }
+
+      /* Poll for data rendered by smartcrm.js and upgrade the visuals */
+      var pollAttempts = 0;
+      var pollTimer = setInterval(function () {
+        pollAttempts++;
+        if (pollAttempts > 20) { clearInterval(pollTimer); return; }
+        var funnelEl = document.getElementById('board-lead-funnel');
+        var leadEl   = document.getElementById('board-employee-performance');
+        var srcEl    = document.getElementById('board-source-performance');
+        var alrtEl   = document.getElementById('board-smart-alerts');
+
+        /* If smartcrm.js already rendered raw text, upgrade it */
+        if (funnelEl && funnelEl.querySelector('article, .smartcrm-bar-row')) {
+          /* smartcrm.js may have rendered report bars — we leave them */
+          clearInterval(pollTimer);
+          return;
+        }
+        if (window._boardData) {
+          boardFunnel(window._boardData.leadFunnel);
+          boardLeaderboard(window._boardData.employeePerformance);
+          boardSourcePerf(window._boardData.sourcePerformance);
+          boardAlerts(window._boardData.smartAlerts);
+          clearInterval(pollTimer);
+        }
+      }, 350);
+
+      /* Hook into the global renderReports to capture board data */
+      var origLoad = null;
+      Object.defineProperty(window, '_boardData', {
+        writable: true, configurable: true,
+        value: null
+      });
+
+    }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="content-page smartcrm-page" data-smartcrm-page="client">
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="header-home-link brand-name">
+        <img class="site-logo" src="logo.jpg" alt="Nidhi Path logo">
+        <span class="brand-text">Nidhi Path</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <button class="hamburger" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="client-dashboard.html" class="is-active">Dashboard</a>
+        <a href="#client-references">My Leads</a>
+        <button type="button" class="header-login-link" onclick="window.NIDHI_logoutUser ? window.NIDHI_logoutUser() : location.href='login.html'">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-main smartcrm-main">
+    <section class="smartcrm-hero">
+      <p class="eyebrow">Reference Partner Portal</p>
+      <h1>Welcome, <span id="client-name">Partner</span></h1>
+      <p>Track your referred students, loan progress, and commission summary below.</p>
+    </section>
+    <p class="form-status" id="smartcrm-status" aria-live="polite"></p>
+
+    <section class="admin-metric-grid compact smartcrm-kpis" id="client-summary-cards">
+      <article role="button" tabindex="0" data-client-card="total"><span>Total Referrals</span><strong id="client-total-references">0</strong></article>
+      <article role="button" tabindex="0" data-client-card="approved"><span>Approved / Disbursed</span><strong id="client-approved-disbursed">0</strong></article>
+      <article role="button" tabindex="0" data-client-card="ongoing"><span>Ongoing</span><strong id="client-ongoing">0</strong></article>
+      <article role="button" tabindex="0" data-client-card="rejected"><span>Rejected</span><strong id="client-rejected">0</strong></article>
+      <article role="button" tabindex="0" data-client-card="due"><span>Commission Due</span><strong id="client-commission-due">&mdash;</strong></article>
+      <article role="button" tabindex="0" data-client-card="paid"><span>Commission Paid</span><strong id="client-commission-paid">&mdash;</strong></article>
+      <article role="button" tabindex="0" data-client-card="commission"><span>Total Commission Value</span><strong id="client-total-commission">&mdash;</strong></article>
+      <article role="button" tabindex="0" data-client-card="access"><span>Access Level</span><strong>Role-Based</strong></article>
+    </section>
+
+    <section class="admin-panel" id="client-card-details" hidden>
+      <div class="admin-panel-head">
+        <h2 id="client-card-detail-title">Details</h2>
+        <span class="admin-table-note">Only your linked records are returned by the API.</span>
+      </div>
+      <div id="client-card-detail-body"></div>
+    </section>
+
+    <section class="admin-panel" id="client-references">
+      <form class="admin-editor-grid smartcrm-form" id="client-reply-form">
+        <label>Application
+          <select name="applicationId" id="client-reply-application">
+            <option value="">Select application to reply to</option>
+          </select>
+        </label>
+      </form>
+    </section>
+
+    <section class="admin-panel">
+      <div class="admin-panel-head">
+        <h2>Updates &amp; Notifications</h2>
+        <span class="status-pill">Client-Visible Updates</span>
+      </div>
+      <div class="smartcrm-update-list" id="client-updates-list">
+        <p class="admin-table-note">No updates yet.</p>
+      </div>
+    </section>
+
+    <section class="admin-panel">
+      <form class="admin-editor-grid smartcrm-form" id="client-reply-message-form">
+        <label class="span-2">Your Reply
+          <textarea name="message" rows="3" required placeholder="Type your message or query here..."></textarea>
+        </label>
+        <div class="admin-actions span-2">
+          <button type="submit" class="btn">Send Reply</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="user.js"></script>
+  <script src="smartcrm.js?v=024"></script>
+</body>
+</html>

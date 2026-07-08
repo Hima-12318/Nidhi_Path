@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page" data-admin-page="users">
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name">
+      <img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo">
+      <span class="brand-text">Nidhi Path</span>
+    </a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+  <main class="admin-main">
+    <section class="admin-heading">
+      <p class="eyebrow">User Management</p>
+      <h1>SmartCRM Users</h1>
+      <p>Create and manage Students, Clients, Employees and Board Members. All accounts connect directly to the CRM lead lifecycle.</p>
+    </section>
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+    <section class="users-home-screen" data-users-section="home">
+      <div class="users-action-grid" aria-label="User management actions">
+        <a class="users-action-card" href="admin-users.html?mode=create">
+          <strong>Create Users</strong>
+          <span>Add a Student / Lead, Client, Employee or Board Member account with role-specific fields and CRM auto-linking.</span>
+        </a>
+        <a class="users-action-card" href="admin-users.html?mode=view">
+          <strong>View Existing Users</strong>
+          <span>Browse all accounts by type. Search, filter by status, view lead counts, commission data and take action.</span>
+        </a>
+      </div>
+    </section>
+    <!-- Dynamic users module root — injected by admin.js loadUsersModule() -->
+  </main>
+  <script src="script.js"></script>
+  <script src="admin.js?v=019"></script>
+</body>
+</html>

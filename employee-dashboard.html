@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Dashboard | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=017">
+</head>
+<body class="content-page smartcrm-page" data-smartcrm-page="employee">
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="header-home-link brand-name">
+        <img class="site-logo" src="logo.jpg" alt="Nidhi Path logo">
+        <span class="brand-text">Nidhi Path</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <button class="hamburger" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="employee-dashboard.html" class="is-active">Dashboard</a>
+        <a href="#daily-update">Daily Update</a>
+        <button type="button" class="header-login-link" onclick="window.NIDHI_logoutUser ? window.NIDHI_logoutUser() : location.href='login.html'">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-main smartcrm-main">
+    <section class="smartcrm-hero">
+      <p class="eyebrow">Employee Workspace</p>
+      <h1>Assigned Work - <span id="employee-name">Employee</span></h1>
+      <p>Your assigned applications, employee reference leads, pending follow-ups and daily work reporting.</p>
+    </section>
+    <p class="form-status" id="smartcrm-status" aria-live="polite"></p>
+
+    <section class="admin-metric-grid compact smartcrm-kpis">
+      <article role="button" tabindex="0" data-employee-card="assigned"><span>Assigned Applications</span><strong id="employee-assigned">0</strong></article>
+      <article role="button" tabindex="0" data-employee-card="followups"><span>Pending Follow-ups</span><strong id="employee-followups">0</strong></article>
+      <article role="button" tabindex="0" data-employee-card="sanctioned"><span>Sanctioned</span><strong id="employee-sanctioned">0</strong></article>
+      <article role="button" tabindex="0" data-employee-card="disbursed"><span>Disbursed</span><strong id="employee-disbursed">0</strong></article>
+    </section>
+
+    <section class="admin-panel" id="daily-update">
+      <div class="admin-panel-head">
+        <h2>Employee Daily Work Update</h2>
+        <span class="status-pill">Submit by End of Day</span>
+      </div>
+      <form class="admin-editor-grid smartcrm-form" id="employee-daily-update-form">
+        <label>Work Date <input type="date" name="workDate"></label>
+        <label>Total Leads Handled Today <input type="number" min="0" name="totalLeadsHandled" placeholder="0"></label>
+        <label>New Leads Contacted <input type="number" min="0" name="newLeadsContacted" placeholder="0"></label>
+        <label>Follow-ups Done <input type="number" min="0" name="followupsDone" placeholder="0"></label>
+        <label>Documents Collected <input type="number" min="0" name="documentsCollected" placeholder="0"></label>
+        <label>Files Logged Into Bank <input type="number" min="0" name="bankLoginsDone" placeholder="0"></label>
+        <label>Verification Calls Completed <input type="number" min="0" name="verificationUpdates" placeholder="0"></label>
+        <label>Sanction Updates Received <input type="number" min="0" name="sanctionUpdates" placeholder="0"></label>
+        <label>Disbursement Updates Received <input type="number" min="0" name="disbursementUpdates" placeholder="0"></label>
+        <label>Rejected Cases <input type="number" min="0" name="rejectedCount" placeholder="0"></label>
+        <label>Not Interested Cases <input type="number" min="0" name="notInterestedCount" placeholder="0"></label>
+        <label class="span-2">Pending Issues / Blockers
+          <textarea name="pendingIssues" rows="3" placeholder="Any blockers or follow-up issues to escalate..."></textarea>
+        </label>
+        <label class="span-2">Tomorrow's Follow-up Plan
+          <textarea name="tomorrowPlan" rows="3" placeholder="Plan for tomorrow's work..."></textarea>
+        </label>
+        <label class="span-2">Remarks
+          <textarea name="remarks" rows="2" placeholder="Any additional remarks or notes..."></textarea>
+        </label>
+        <div class="admin-actions span-2">
+          <button type="submit" class="btn">Submit Daily Update</button>
+        </div>
+      </form>
+      <div class="smartcrm-daily-history">
+        <div class="admin-panel-head">
+          <h3>Recent Submitted Daily Updates</h3>
+          <span class="status-pill">Saved in Supabase</span>
+        </div>
+        <div class="smartcrm-report-table-wrap">
+          <table class="smartcrm-report-table">
+            <thead>
+              <tr>
+                <th>Work Date</th>
+                <th>Total Leads</th>
+                <th>New Leads</th>
+                <th>Follow-ups</th>
+                <th>Sanctions</th>
+                <th>Disbursements</th>
+                <th>Documents</th>
+                <th>Bank Logins</th>
+                <th>Notes</th>
+                <th>Submitted</th>
+              </tr>
+            </thead>
+            <tbody id="employee-daily-history-body">
+              <tr><td colspan="10">No daily updates loaded yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="admin-panel">
+      <div class="admin-panel-head">
+        <h2>Client Replies</h2>
+        <span class="status-pill">Assigned Applications</span>
+      </div>
+      <div class="smartcrm-update-list" id="employee-client-replies-list">
+        <p class="admin-table-note">No client replies yet.</p>
+      </div>
+    </section>
+
+    <section class="admin-panel">
+      <div class="admin-panel-head">
+        <h2>Add Update</h2>
+        <span class="status-pill">Assigned Applications</span>
+      </div>
+      <form class="admin-editor-grid smartcrm-form" id="employee-update-form">
+        <label class="span-2">Application
+          <select name="applicationId" id="employee-update-application">
+            <option value="">Select application</option>
+          </select>
+        </label>
+        <label>Update Type
+          <select name="updateType">
+            <option value="message">Message</option>
+            <option value="status_update">Status Update</option>
+            <option value="document_request">Document Request</option>
+            <option value="internal_note">Internal Note</option>
+          </select>
+        </label>
+        <label>Title
+          <input type="text" name="title" placeholder="e.g. Documents received">
+        </label>
+        <label class="span-2">Message
+          <textarea name="message" rows="4" required placeholder="Update message or note..."></textarea>
+        </label>
+        <label class="employee-update-check"><input type="checkbox" name="studentVisible" checked> <span>Student</span></label>
+        <label class="employee-update-check"><input type="checkbox" name="clientVisible" checked> <span>Client</span></label>
+        <label class="employee-update-check"><input type="checkbox" name="boardVisible"> <span>Board</span></label>
+        <label class="employee-update-check"><input type="checkbox" name="internalOnly"> <span>Internal Only</span></label>
+        <div class="admin-actions span-2">
+          <button type="submit" class="btn">Post Update</button>
+        </div>
+      </form>
+      <div class="smartcrm-update-list" id="employee-updates-list" style="margin-top:1rem">
+        <p class="admin-table-note">No updates posted yet.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="user.js"></script>
+  <script src="smartcrm.js?v=030"></script>
+</body>
+</html>

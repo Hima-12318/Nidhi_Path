@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Users | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="admin-page" data-admin-page="users" data-users-view="list">
+  <header class="admin-topbar">
+    <a href="admin-dashboard.html" class="header-home-link brand-name">
+      <img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo">
+      <span class="brand-text">Nidhi Path</span>
+    </a>
+    <nav class="admin-nav" aria-label="Admin navigation"></nav>
+    <button type="button" class="header-login-link" data-admin-logout>Logout</button>
+  </header>
+  <main class="admin-main">
+    <section class="admin-heading">
+      <p class="eyebrow">User Management</p>
+      <h1>View Existing Users</h1>
+      <p>Browse Students, Clients, Employees and Board Members. Search, filter and manage records.</p>
+    </section>
+    <p class="form-status" id="admin-page-status" aria-live="polite"></p>
+    <!-- Dynamic users module is injected here by admin.js loadUsersModule() -->
+  </main>
+  <script src="script.js"></script>
+  <script src="admin.js?v=016"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="home-page content-page">
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path logo"><span class="brand-text">Nidhi Path</span></a>
+      <a href="login.html" class="header-login-link" data-i18n="login">Login</a>
+      <label class="translate-chip" for="language-select">
+        <span data-i18n="translate-label">Translate</span>
+        <select id="language-select" class="language-select">
+          <option value="en">English</option>
+          <option value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option>
+          <option value="te">&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;</option>
+        </select>
+      </label>
+    </div>
+    <div class="header-right">
+      <button class="hamburger" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="index.html" data-i18n="home-nav">Home</a>
+        <a href="services.html" data-i18n="services-nav">Services</a>
+        <a href="about.html" data-i18n="about-us-nav">About Us</a>
+        <a href="eligibility.html" data-i18n="eligibility-nav">Eligibility</a>
+        <a href="contact.html" class="is-active" data-i18n="contact-us-nav">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-main contact-lab-main">
+    <section class="contact-lab-hero">
+      <div class="contact-hero-copy">
+        <p class="eyebrow">Loan Support Desk</p>
+        <h1>Start your conversation with <span class="brand-name brand-name-inline">Nidhi Path</span></h1>
+        <p>
+          Tell us what you are planning. Our team will help you understand the right loan path,
+          document preparation, repayment estimate and next practical step before formal processing.
+        </p>
+        <div class="contact-action-row">
+          <a href="tel:+919705682595">Call +91 97056 82595</a>
+          <a href="mailto:info@nidhipath.in">Email the Desk</a>
+          <a href="https://maps.app.goo.gl/gKMZ7mSm5YEk1dWK8" target="_blank" rel="noopener">Open Office Map</a>
+        </div>
+      </div>
+      <aside class="contact-hero-badge">
+        <img src="logo.jpg" alt="Nidhi Path Loan Ventures logo">
+        <span>Way to Money</span>
+      </aside>
+    </section>
+
+    <section class="contact-command-center">
+      <form id="contact-form" class="contact-intake-card">
+        <div class="form-intro-block">
+          <p class="eyebrow">Enquiry Intake</p>
+          <h2>Share your requirement</h2>
+          <p>Use this form for education loan, home loan, business loan, personal loan, insurance or consultation support.</p>
+        </div>
+
+        <div class="contact-form-grid">
+          <label>
+            Full Name
+            <input type="text" id="contact-name" name="name" placeholder="Enter your full name" autocomplete="name" required>
+          </label>
+          <label>
+            Phone Number
+            <input type="tel" id="contact-phone" name="phone" placeholder="+91 9876543210" autocomplete="tel" required>
+          </label>
+          <label>
+            Email Address
+            <input type="email" id="contact-email" name="email" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label>
+            City
+            <input type="text" id="contact-city" name="city" placeholder="Your city">
+          </label>
+          <label>
+            Service Needed
+            <select id="contact-service" name="service" required>
+              <option>Education Loan</option>
+              <option>Personal Loan</option>
+              <option>Business Loan</option>
+              <option>Home Loan</option>
+              <option>Mutual Funds</option>
+              <option>Insurance</option>
+              <option>All Types of Loans</option>
+              <option>Loan Comparison Assistance</option>
+              <option>Documentation Support</option>
+              <option>Loan Consultation</option>
+            </select>
+          </label>
+          <label>
+            Approx. Loan Amount
+            <input type="text" id="contact-amount" name="loanAmount" placeholder="Example: INR 25,00,000">
+          </label>
+        </div>
+
+        <label class="message-field">
+          Requirement Notes
+          <textarea id="contact-message" name="message" rows="5" placeholder="Tell us about your admission, loan need, documents, or questions..." required></textarea>
+        </label>
+
+        <input type="text" id="contact-website" name="companyWebsite" class="honeypot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="form-consent">By submitting this form, you agree that Nidhi Path Loan Ventures may contact you regarding your enquiry.</p>
+        <button type="submit" class="btn btn-block">Send Requirement</button>
+        <p class="form-status" id="contact-form-status" aria-live="polite"></p>
+      </form>
+
+      <aside class="contact-side-panel">
+        <div class="response-card primary-response-card">
+          <span>Fastest response</span>
+          <h2>Phone support</h2>
+          <a href="tel:+919705682595">+91 97056 82595</a>
+        </div>
+
+        <div class="response-grid">
+          <article class="response-card">
+            <span>Email</span>
+            <a href="mailto:info@nidhipath.in">info@nidhipath.in</a>
+          </article>
+          <article class="response-card">
+            <span>Website</span>
+            <a href="https://www.nidhipath.in">www.nidhipath.in</a>
+          </article>
+          <article class="response-card">
+            <span>Office Hours</span>
+            <p>Monday to Saturday<br>10:00 AM to 6:30 PM</p>
+          </article>
+          <article class="response-card">
+            <span>Support Focus</span>
+            <p>All types of loans, documentation and loan consultation.</p>
+          </article>
+        </div>
+      </aside>
+    </section>
+
+    <section class="page-section contact-prep-section">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">Before You Contact</p>
+        <h2>Share the details that help us guide you faster</h2>
+      </div>
+      <div class="contact-prep-grid">
+        <article class="prep-card-education">
+          <strong>Education loan</strong>
+          <span>Course, college, country or city, admission status, fee structure and parent/co-applicant details.</span>
+        </article>
+        <article class="prep-card-home">
+          <strong>Personal or home loan</strong>
+          <span>Approximate amount, monthly income, existing EMIs, property stage and preferred tenure.</span>
+        </article>
+        <article class="prep-card-business">
+          <strong>Business loan</strong>
+          <span>Business type, years in operation, banking history, loan purpose and basic turnover range.</span>
+        </article>
+        <article class="prep-card-consultation">
+          <strong>Consultation</strong>
+          <span>Your goal, urgency, available documents and the exact point where you need clarity.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="office-navigator">
+      <div class="office-copy-card">
+        <p class="eyebrow">Visit Our Office</p>
+        <h2>Vijayawada support point</h2>
+        <address>
+          4th Floor, Prasad Plaza,<br>
+          Brooks Backside Lane,<br>
+          Konera Lakshmaya Gari Veedhi,<br>
+          Near United Telugu Kitchens Restaurant,<br>
+          40-3/14-6/4C, Vijayawada,<br>
+          Andhra Pradesh 520010
+        </address>
+        <a class="btn secondary-btn" href="https://maps.app.goo.gl/gKMZ7mSm5YEk1dWK8" target="_blank" rel="noopener">Open Route</a>
+      </div>
+      <div class="office-map-card">
+        <iframe
+          title="Nidhi Path Loan Ventures office map"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=16.5030278,80.6472778&z=17&output=embed">
+        </iframe>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4 data-i18n="services-title">Our Services</h4>
+        <ul class="footer-link-list">
+          <li><a href="education-loan.html" data-i18n="education-loan"></a></li>
+          <li><a href="personal-loan.html" data-i18n="personal-loan"></a></li>
+          <li><a href="business-loan.html" data-i18n="business-loan"></a></li>
+          <li><a href="home-loan.html" data-i18n="home-loan"></a></li>
+          <li><a href="mutual-funds.html" data-i18n="mutual-funds"></a></li>
+          <li><a href="insurance.html" data-i18n="insurance"></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="contact-title">Contact Us</h4>
+        <p>Vamsi Krishna Kiliampalli</p>
+        <p>Managing Director</p>
+        <p><a href="tel:+919705682595">+91 97056 82595</a></p>
+        <p><a href="mailto:info@nidhipath.in">info@nidhipath.in</a></p>
+      </div>
+      <div>
+        <h4><span class="brand-name">Nidhi Path</span></h4>
+        <p>Way to Money</p>
+        <p>Vijayawada, Andhra Pradesh</p>
+      </div>
+    </div>
+    <p>&copy; 2026 <span class="brand-name brand-name-inline">Nidhi Path</span> Loan Ventures. All rights reserved. Terms &amp; Conditions Apply. Loan approval is subject to bank policies, eligibility, verification, documentation, and credit assessment.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

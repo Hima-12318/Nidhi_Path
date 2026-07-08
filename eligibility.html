@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eligibility | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="home-page content-page">
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path logo"><span class="brand-text">Nidhi Path</span></a>
+      <a href="login.html" class="header-login-link" data-i18n="login">Login</a>
+      <label class="translate-chip" for="language-select">
+        <span data-i18n="translate-label">Translate</span>
+        <select id="language-select" class="language-select">
+          <option value="en">English</option>
+          <option value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option>
+          <option value="te">&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;</option>
+        </select>
+      </label>
+    </div>
+    <div class="header-right">
+      <button class="hamburger" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="index.html" data-i18n="home-nav">Home</a>
+        <a href="services.html" data-i18n="services-nav">Services</a>
+        <a href="about.html" data-i18n="about-us-nav">About Us</a>
+        <a href="eligibility.html" class="is-active" data-i18n="eligibility-nav">Eligibility</a>
+        <a href="contact.html" data-i18n="contact-us-nav">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-main">
+    <section class="content-hero">
+      <p class="eyebrow">Eligibility</p>
+      <h1>Loan Eligibility & Document Preparation</h1>
+      <p>Use this page as a practical preparation checklist before speaking with our team. It combines education-loan document planning, other loan requirements and an advanced EMI planner for first-level financial clarity.</p>
+    </section>
+
+    <section class="page-section two-column">
+      <article class="info-card">
+        <h2>For Education Loan</h2>
+        <ul class="check-list">
+          <li>Student admission proof</li>
+          <li>Academic records</li>
+          <li>Co-applicant or parent details</li>
+          <li>Income proof if applicable</li>
+          <li>KYC documents</li>
+          <li>Bank statements if required</li>
+        </ul>
+      </article>
+      <article class="info-card">
+        <h2>For Other Loans</h2>
+        <ul class="check-list">
+          <li>KYC documents</li>
+          <li>Income proof</li>
+          <li>Bank statements</li>
+          <li>Property or business documents based on loan type</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="page-section">
+      <div class="eligibility-readiness-grid">
+        <article>
+          <span>Student Profile</span>
+          <h3>Admission and academic preparation</h3>
+          <p>Keep admission letter or offer proof, course duration, fee structure, academic records and entrance result details ready where applicable.</p>
+        </article>
+        <article>
+          <span>Co-applicant</span>
+          <h3>Parent or guardian details</h3>
+          <p>Education loans commonly require parent or co-applicant information, KYC, bank statements and income details based on the bank process.</p>
+        </article>
+        <article>
+          <span>Repayment</span>
+          <h3>EMI and moratorium planning</h3>
+          <p>Plan repayment using tenure, interest rate, down payment, processing fee and education moratorium assumptions before the formal application.</p>
+        </article>
+        <article>
+          <span>Other Loans</span>
+          <h3>Income and credit profile</h3>
+          <p>For personal, home and business loans, eligibility commonly depends on income, obligations, credit history, bank statements and loan purpose.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="advanced-emi-planner" id="advanced-emi-planner">
+      <div class="planner-heading">
+        <p class="eyebrow">Smart EMI Planner</p>
+        <h2>Plan eligibility, EMI and loan cost in one view</h2>
+        <p>
+          Estimate your EMI with education-specific options like moratorium, plus processing fee,
+          down payment, disbursement estimate and a first-month repayment preview.
+        </p>
+      </div>
+
+      <div class="planner-shell">
+        <form class="planner-controls" id="advanced-emi-form">
+          <div class="planner-control-grid">
+            <label class="planner-field">
+              Loan Type
+              <select id="advanced-loan-type">
+                <option>Education Loan</option>
+                <option>Home Loan</option>
+                <option>Personal Loan</option>
+                <option>Business Loan</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label class="planner-field">
+              Tenure Mode
+              <select id="advanced-tenure-mode">
+                <option value="months">Months</option>
+                <option value="years" selected>Years</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <span>Loan Amount</span>
+              <input type="number" id="advanced-amount" value="2500000" min="100000" step="50000">
+            </div>
+            <input type="range" id="advanced-amount-range" min="100000" max="10000000" step="50000" value="2500000">
+            <div class="range-scale"><span>&#8377;1L</span><span>&#8377;1Cr</span></div>
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <span>Annual Interest Rate</span>
+              <input type="number" id="advanced-rate" value="11.5" min="0" max="24" step="0.1">
+            </div>
+            <input type="range" id="advanced-rate-range" min="0" max="24" step="0.1" value="11.5">
+            <div class="range-scale"><span>0%</span><span>24%</span></div>
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <span>Loan Tenure</span>
+              <input type="number" id="advanced-tenure" value="10" min="1" step="1">
+            </div>
+            <input type="range" id="advanced-tenure-range" min="1" max="360" step="1" value="120">
+            <div class="range-scale"><span>1 month</span><span>30 years</span></div>
+          </div>
+
+          <div class="planner-control-grid">
+            <label class="planner-field">
+              Down Payment / Margin Money
+              <input type="number" id="advanced-downpayment" value="0" min="0" step="10000">
+            </label>
+            <label class="planner-field">
+              Processing Fee %
+              <input type="number" id="advanced-processing" value="1" min="0" max="10" step="0.1">
+            </label>
+            <label class="planner-field">
+              Education Moratorium (months)
+              <input type="number" id="advanced-moratorium" value="12" min="0" max="84" step="1">
+            </label>
+          </div>
+        </form>
+
+        <aside class="planner-results" aria-live="polite">
+          <div class="emi-hero-result">
+            <span>Estimated Monthly EMI</span>
+            <strong id="advanced-monthly-emi">&#8377;0</strong>
+            <p id="advanced-tenure-summary">120 months repayment tenure</p>
+          </div>
+
+          <div class="result-metrics">
+            <div><span>Principal</span><strong id="advanced-principal">&#8377;0</strong></div>
+            <div><span>Total Interest</span><strong id="advanced-interest">&#8377;0</strong></div>
+            <div><span>Total Payable</span><strong id="advanced-payable">&#8377;0</strong></div>
+            <div><span>Processing Fee</span><strong id="advanced-fee">&#8377;0</strong></div>
+            <div><span>Estimated Disbursement</span><strong id="advanced-disbursement">&#8377;0</strong></div>
+            <div><span>Moratorium Interest</span><strong id="advanced-moratorium-interest">&#8377;0</strong></div>
+          </div>
+
+          <div class="repayment-mix">
+            <div class="mix-header">
+              <span>Repayment Mix</span>
+              <strong id="advanced-mix-label">Principal vs Interest</strong>
+            </div>
+            <div class="mix-bar">
+              <span id="advanced-principal-bar"></span>
+              <span id="advanced-interest-bar"></span>
+            </div>
+            <div class="mix-legend">
+              <span><i class="principal-dot"></i>Principal</span>
+              <span><i class="interest-dot"></i>Interest</span>
+            </div>
+          </div>
+
+          <div class="mini-amortization">
+            <h3>First 6 Months Preview</h3>
+            <div class="mini-table" id="advanced-amortization"></div>
+          </div>
+
+          <p class="planner-disclaimer">
+            This is an estimate for planning only. Final EMI, eligibility, rate, charges and disbursement depend on multiple bank policies, documents and credit assessment.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page-cta">
+      <a class="btn" href="#advanced-emi-planner">Check My Eligibility</a>
+    </section>
+
+    <section class="page-section">
+      <div class="responsibility-note">
+        <strong>Important:</strong>
+        <span>Calculated EMI and document lists are planning aids only. Final eligibility, loan amount, interest rate, fees, collateral and disbursement depend on multiple bank policies, credit profile, verification and submitted documents.</span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4 data-i18n="services-title">Our Services</h4>
+        <ul class="footer-link-list">
+          <li><a href="education-loan.html" data-i18n="education-loan"></a></li>
+          <li><a href="personal-loan.html" data-i18n="personal-loan"></a></li>
+          <li><a href="business-loan.html" data-i18n="business-loan"></a></li>
+          <li><a href="home-loan.html" data-i18n="home-loan"></a></li>
+          <li><a href="mutual-funds.html" data-i18n="mutual-funds"></a></li>
+          <li><a href="insurance.html" data-i18n="insurance"></a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="contact-title">Contact Us</h4>
+        <p>Vamsi Krishna Kiliampalli</p>
+        <p>Managing Director</p>
+        <p><a href="tel:+919705682595">+91 97056 82595</a></p>
+        <p><a href="mailto:info@nidhipath.in">info@nidhipath.in</a></p>
+      </div>
+      <div>
+        <h4><span class="brand-name">Nidhi Path</span></h4>
+        <p>Way to Money</p>
+        <p>Vijayawada, Andhra Pradesh</p>
+      </div>
+    </div>
+    <p>&copy; 2026 <span class="brand-name brand-name-inline">Nidhi Path</span> Loan Ventures. All rights reserved. Terms &amp; Conditions Apply. Loan approval is subject to bank policies, eligibility, verification, documentation, and credit assessment.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

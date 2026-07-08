@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Details | Nidhi Path SmartCRM Intelligence</title>
+  <link rel="stylesheet" href="style.css?v=016">
+</head>
+<body class="content-page smartcrm-page" data-smartcrm-page="client-detail">
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="header-home-link brand-name">
+        <img class="site-logo" src="logo.jpg" alt="Nidhi Path logo">
+        <span class="brand-text">Nidhi Path</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <button class="hamburger" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="client-dashboard.html">Dashboard</a>
+        <button type="button" class="header-login-link" onclick="window.NIDHI_logoutUser ? window.NIDHI_logoutUser() : location.href='login.html'">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-main smartcrm-main">
+    <section class="smartcrm-hero">
+      <p class="eyebrow">Reference Partner Portal</p>
+      <h1>Details for <span id="client-detail-name">Partner</span></h1>
+      <p>Only records linked to your client account are shown.</p>
+    </section>
+    <p class="form-status" id="smartcrm-status" aria-live="polite"></p>
+
+    <section class="admin-panel" id="client-card-details">
+      <div class="admin-panel-head">
+        <h2 id="client-card-detail-title">Details</h2>
+        <a href="client-dashboard.html" class="table-action">Back to dashboard</a>
+      </div>
+      <div id="client-card-detail-body">
+        <p class="admin-table-note">Loading details...</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="user.js"></script>
+  <script src="smartcrm.js?v=024"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard | Nidhi Path Loan Ventures</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="content-page user-dashboard-page">
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="header-home-link brand-name"><img class="site-logo" src="logo.jpg" alt="Nidhi Path Loan Ventures logo"><span class="brand-text">Nidhi Path</span></a>
+      <a href="login.html" class="header-login-link">Login</a>
+    </div>
+    <div class="header-right">
+      <button class="hamburger" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="user-dashboard.html">Dashboard</a>
+        <a href="#user-application-detail">Application</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact Us</a>
+        <button type="button" class="header-login-link" data-user-logout>Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-main user-dashboard-main">
+    <section class="content-hero user-dashboard-hero">
+      <p class="eyebrow">User Account</p>
+      <h1 id="user-dashboard-title">Welcome to your Nidhi Path account</h1>
+      <p>Track your account status, CRM application status, and updates from the Nidhi Path team.</p>
+    </section>
+    <p class="form-status" id="user-dashboard-status" aria-live="polite"></p>
+    <section class="admin-metric-grid compact">
+      <article><span>Account status</span><strong id="user-account-status">-</strong></article>
+      <article><span>Application ID</span><strong id="user-application-id">-</strong></article>
+      <article><span>Application status</span><strong id="user-application-status">-</strong></article>
+      <article><span>Service</span><strong id="user-application-service">-</strong></article>
+      <article><span>Client type</span><strong id="user-client-type">-</strong></article>
+    </section>
+    <section class="user-dashboard-sections" id="user-application-detail">
+      <article class="user-dashboard-card accent-navy">
+        <div class="admin-panel-head"><h2>Application Details</h2><span class="status-pill" id="user-application-detail-badge">Pending</span></div>
+        <div class="admin-detail-grid" id="user-application-details-grid"></div>
+      </article>
+      <article class="user-dashboard-card accent-teal">
+        <div class="admin-panel-head"><h2>Bank Update</h2><span class="status-pill" id="user-bank-update-badge">Pending</span></div>
+        <div class="admin-detail-grid" id="user-bank-update-grid"></div>
+      </article>
+      <article class="user-dashboard-card accent-gold">
+        <div class="admin-panel-head"><h2>Next Follow-up</h2><span class="status-pill" id="user-followup-badge">To be updated</span></div>
+        <div class="admin-detail-grid" id="user-followup-grid"></div>
+      </article>
+      <article class="user-dashboard-card accent-soft">
+        <div class="admin-panel-head"><h2>Documents Related</h2><span class="status-pill" id="user-documents-badge">Pending</span></div>
+        <div class="admin-detail-grid" id="user-documents-grid"></div>
+      </article>
+    </section>
+    <section class="user-dashboard-card accent-navy">
+      <div class="admin-panel-head"><h2>Latest Updates</h2></div>
+      <div class="admin-timeline" id="user-updates-timeline"></div>
+    </section>
+    <section class="admin-panel" id="b2b-update-panel" hidden>
+      <div class="admin-panel-head"><h2>Partner update to admin</h2></div>
+      <form class="admin-status-form" id="b2b-update-form">
+        <label>Message <textarea name="message" rows="4" required placeholder="Share referral/client progress or a partner update"></textarea></label>
+        <button type="submit" class="btn">Submit Update</button>
+        <p class="form-status" id="b2b-update-status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer></footer>
+  <script src="script.js"></script>
+  <script src="user.js"></script>
+</body>
+</html>
